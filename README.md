@@ -1,4 +1,4 @@
-# frontend
+# frontend [![CircleCI](https://circleci.com/gh/NJU-SE-17-advanced-se/frontend.svg?style=svg)](https://circleci.com/gh/NJU-SE-17-advanced-se/frontend)
 
 ## Project setup
 ```
