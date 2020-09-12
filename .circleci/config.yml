@@ -1,0 +1,41 @@
+version: 2.1
+
+# basic env
+workspace: &workspace ~/nju-se-17-advanced-se/frontend
+
+# image
+step_docker_login: &docker_login
+  run: |
+    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin registry.cn-hangzhou.aliyuncs.com
+
+# SSH
+step_add_ssh: &add_ssh
+  add_ssh_keys:
+    fingerprints:
+      - b9:0e:9e:1a:c7:f8:45:ce:68:d8:c4:71:9c:79:12:0d
+
+step_deploy_over_ssh: &deploy_over_ssh
+  run:
+    name: Deploy Over SSH
+    command: |
+      ssh $SSH_USER@$SSH_HOST < ci/service-restart.sh
+
+jobs:
+  deploy:
+    machine:
+      enabled: true
+    working_directory: *workspace
+    steps:
+      - checkout
+      - *docker_login
+      - *add_ssh
+      - *deploy_over_ssh
+
+workflows:
+  release-frontend:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
