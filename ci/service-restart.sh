@@ -17,4 +17,4 @@ sudo docker run -d \
   -p 443:443 \
   -v /root/server-ssh-keys/wensun.top.pem:/etc/nginx/cert/wensun.top.pem \
   -v /root/server-ssh-keys/wensun.top.key:/etc/nginx/cert/wensun.top.key \
-  advanced-se/frontend:latest
+  registry.cn-hangzhou.aliyuncs.com/advanced-se/frontend:latest
