@@ -12,7 +12,7 @@ step_docker_login: &docker_login
 step_add_ssh: &add_ssh
   add_ssh_keys:
     fingerprints:
-      - b9:0e:9e:1a:c7:f8:45:ce:68:d8:c4:71:9c:79:12:0d
+      - $SSH_FINGERPRINT
 
 step_deploy_over_ssh: &deploy_over_ssh
   run:
