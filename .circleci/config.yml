@@ -35,6 +35,8 @@ workflows:
   release-frontend:
     jobs:
       - deploy:
+          context:
+            - WenSun阿里云1核2G
           filters:
             branches:
               only:
