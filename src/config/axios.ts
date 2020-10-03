@@ -1,9 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-axios.defaults.baseURL =
-  process.env.NODE_ENV === "production"
-    ? ""
-    : "";
+axios.defaults.baseURL = process.env.NODE_ENV === "production" ? "" : "";
 
 const globalConfig: AxiosRequestConfig = {
   timeout: 15 * 1000
