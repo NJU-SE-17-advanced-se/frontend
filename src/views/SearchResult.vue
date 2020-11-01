@@ -1,5 +1,5 @@
 <template>
-  <el-container @keydown.enter="doSearch">
+  <el-container @keydown.enter.native="doSearch">
     <el-header style="display: flex; align-items: center">
       <!--返回首页-->
       <el-button type="primary" @click="$router.push('/')">
