@@ -89,7 +89,7 @@ export default Vue.extend({
         path: `/result/${this.searchMode}`,
         query: {
           keyword: this.searchKeyword,
-          page: 1
+          page: "1"
         }
       });
     }

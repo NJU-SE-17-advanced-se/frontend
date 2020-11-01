@@ -97,7 +97,7 @@ export default Vue.extend({
   props: {
     mode: String,
     keyword: String,
-    page: Number
+    page: String
   },
   components: {
     [Card.name]: Card,
@@ -114,7 +114,7 @@ export default Vue.extend({
   data() {
     return {
       // 搜索模式
-      searchMode: this.mode,
+      searchMode: this.mode as SearchModes,
       searchModeOptions: [
         { label: "论文", value: "paper" },
         { label: "学者", value: "researcher" },
@@ -167,7 +167,7 @@ export default Vue.extend({
           citation: 0
         }
       ],
-      currentPage: this.page,
+      currentPage: Number(this.page),
       totalPages: 50
     };
   },
@@ -187,17 +187,33 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.fetchSearchResult(this.mode, this.keyword, this.page);
+    this.fetchSearchResult(
+      this.searchMode,
+      this.searchKeyword,
+      this.currentPage
+    );
   },
   watch: {
     "$route.params.mode"() {
-      this.fetchSearchResult(this.mode, this.keyword);
+      this.fetchSearchResult(
+        this.searchMode,
+        this.searchKeyword,
+        this.currentPage
+      );
     },
     "$route.query.keyword"() {
-      this.fetchSearchResult(this.mode, this.keyword);
+      this.fetchSearchResult(
+        this.searchMode,
+        this.searchKeyword,
+        this.currentPage
+      );
     },
     "$route.query.page"() {
-      this.fetchSearchResult(this.mode, this.keyword, this.currentPage);
+      this.fetchSearchResult(
+        this.searchMode,
+        this.searchKeyword,
+        this.currentPage
+      );
     }
   },
   methods: {
@@ -217,7 +233,7 @@ export default Vue.extend({
         path: `/result/${this.searchMode}`,
         query: {
           keyword: this.searchKeyword,
-          page: this.currentPage
+          page: this.currentPage.toString()
         }
       });
     },

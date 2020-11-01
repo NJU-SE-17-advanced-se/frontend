@@ -20,8 +20,7 @@ const router = new VueRouter({
       component: () => import("@/views/SearchResult.vue"),
       props: route => ({
         ...route.params,
-        ...route.query,
-        page: Number(route.query.page)
+        ...route.query
       })
     },
     // 学者
