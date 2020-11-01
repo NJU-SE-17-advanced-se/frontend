@@ -12,7 +12,17 @@ const router = new VueRouter({
     {
       path: "/",
       name: "首页",
-      component: () => import("@/views/Index.vue")
+      component: () => import("@/views/Search.vue")
+    },
+    {
+      path: "/result/:mode",
+      name: "搜索结果",
+      component: () => import("@/views/SearchResult.vue"),
+      props: route => ({
+        ...route.params,
+        ...route.query,
+        page: Number(route.query.page)
+      })
     },
     // 学者
     {
