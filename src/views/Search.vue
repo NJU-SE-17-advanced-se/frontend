@@ -29,13 +29,13 @@ export default Vue.extend({
   data() {
     return {
       // 搜索模式
-      searchMode: "paper" as SearchModes,
+      searchMode: "papers" as SearchModes,
       searchModeOptions: [
-        { label: "论文", value: "paper" },
-        { label: "学者", value: "researcher" },
-        { label: "领域", value: "domain" },
-        { label: "机构", value: "affiliation" },
-        { label: "出版物", value: "publication" }
+        { label: "论文", value: "papers" },
+        { label: "学者", value: "researchers" },
+        { label: "领域", value: "domains" },
+        { label: "机构", value: "affiliations" },
+        { label: "出版物", value: "publications" }
       ],
       // 搜索关键词
       searchKeyword: "" as string

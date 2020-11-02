@@ -57,11 +57,11 @@ export default Vue.extend({
   computed: {
     searchPlaceholder(): string {
       const placeholders = {
-        paper: "请输入论文相关信息，如标题、摘要、作者",
-        researcher: "请输入学者相关信息，如姓名、机构",
-        domain: "请输入研究领域相关信息，如名称",
-        affiliation: "请输入机构相关信息，如名称",
-        publication: "请输入出版物相关信息，如名称"
+        papers: "请输入论文相关信息，如标题、摘要、作者",
+        researchers: "请输入学者相关信息，如姓名、机构",
+        domains: "请输入研究领域相关信息，如名称",
+        affiliations: "请输入机构相关信息，如名称",
+        publications: "请输入出版物相关信息，如名称"
       };
       return placeholders[this.mode as SearchModes];
     }
