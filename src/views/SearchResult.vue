@@ -7,33 +7,15 @@
       </el-button>
       <el-divider direction="vertical" />
       <!--搜索框-->
-      <el-input
+      <search-bar
         v-model="searchKeyword"
-        :placeholder="searchPlaceholder"
-        class="homepage-header__input"
-        style="vertical-align: center"
-      >
-        <template #prepend>
-          <el-select
-            v-model="searchMode"
-            placeholder="请选择"
-            style="min-width: 100px"
-          >
-            <el-option
-              v-for="modeOption of searchModeOptions"
-              :label="modeOption.label"
-              :value="modeOption.value"
-              :key="modeOption.label"
-            />
-          </el-select>
-        </template>
-        <template #append>
-          <el-button icon="el-icon-search" @click="doSearch" />
-        </template>
-      </el-input>
+        :mode="searchMode"
+        :options="searchModeOptions"
+        @mode-change="updateSearchMode"
+        @search="doSearch"
+      />
     </el-header>
     <el-main>
-      <!--      {{ mode }} : {{ keyword }}-->
       <!--展示搜索结果简略信息-->
       <el-card
         v-for="(paper, i) of papersBasicInfo"
@@ -76,21 +58,14 @@ import {
   Divider,
   Header,
   Input,
-  Link,
   Main,
   Option,
   Pagination,
   Select
 } from "element-ui";
+import SearchBar from "@/components/SearchBar.vue";
 import { isMobile } from "@/utils/breakpoint";
-
-// 现有的搜索类型
-type SearchModes =
-  | "paper"
-  | "researcher"
-  | "domain"
-  | "affiliation"
-  | "publication";
+import { SearchModes } from "@/interfaces/Search";
 
 export default Vue.extend({
   name: "SearchResult",
@@ -105,11 +80,11 @@ export default Vue.extend({
     [Divider.name]: Divider,
     [Header.name]: Header,
     [Input.name]: Input,
-    [Link.name]: Link,
     [Main.name]: Main,
     [Option.name]: Option,
     [Pagination.name]: Pagination,
-    [Select.name]: Select
+    [Select.name]: Select,
+    SearchBar
   },
   data() {
     return {
@@ -172,16 +147,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    searchPlaceholder(): string {
-      const placeholders = {
-        paper: "请输入论文相关信息，如标题、摘要、作者",
-        researcher: "请输入学者相关信息，如姓名、机构",
-        domain: "请输入研究领域相关信息，如名称",
-        affiliation: "请输入机构相关信息，如名称",
-        publication: "请输入出版物相关信息，如名称"
-      };
-      return placeholders[this.searchMode];
-    },
     isPaginationSmall(): boolean {
       return isMobile();
     }
@@ -223,6 +188,9 @@ export default Vue.extend({
       const LIMIT = 500;
       return abs.length > LIMIT ? abs.substr(0, LIMIT) + "..." : abs;
     },
+    updateSearchMode(mode: SearchModes) {
+      this.searchMode = mode;
+    },
     // 搜索
     doSearch() {
       if (!this.searchKeyword) {
@@ -237,11 +205,10 @@ export default Vue.extend({
         }
       });
     },
+    // 获取搜索结果
     fetchSearchResult(mode: SearchModes, keyword: string, page = 1) {
       console.log("fetching", mode, keyword, page);
     }
   }
 });
 </script>
-
-<style scoped></style>

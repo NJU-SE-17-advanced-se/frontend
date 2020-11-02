@@ -7,51 +7,25 @@
     <p class="homepage-header__intro">
       Mining Scholar Data
     </p>
-    <el-input
+    <!--搜索框-->
+    <search-bar
       v-model="searchKeyword"
-      :placeholder="searchPlaceholder"
-      class="homepage-header__input"
-    >
-      <template #prepend>
-        <el-select
-          v-model="searchMode"
-          placeholder="请选择"
-          style="min-width: 100px"
-        >
-          <el-option
-            v-for="modeOption of searchModeOptions"
-            :label="modeOption.label"
-            :value="modeOption.value"
-            :key="modeOption.label"
-          />
-        </el-select>
-      </template>
-      <template #append>
-        <el-button icon="el-icon-search" @click="doSearch" />
-      </template>
-    </el-input>
+      :mode="searchMode"
+      :options="searchModeOptions"
+      @mode-change="updateSearchMode"
+      @search="doSearch"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Input, Option, Select } from "element-ui";
-
-// 现有的搜索类型
-type SearchModes =
-  | "paper"
-  | "researcher"
-  | "domain"
-  | "affiliation"
-  | "publication";
+import SearchBar from "@/components/SearchBar.vue";
+import { SearchModes } from "@/interfaces/Search";
 
 export default Vue.extend({
-  name: "Index",
-  components: {
-    [Input.name]: Input,
-    [Option.name]: Option,
-    [Select.name]: Select
-  },
+  name: "Search",
+  components: { SearchBar },
   data() {
     return {
       // 搜索模式
@@ -67,19 +41,10 @@ export default Vue.extend({
       searchKeyword: "" as string
     };
   },
-  computed: {
-    searchPlaceholder(): string {
-      const placeholders = {
-        paper: "请输入论文相关信息，如标题、摘要、作者",
-        researcher: "请输入学者相关信息，如姓名、机构",
-        domain: "请输入研究领域相关信息，如名称",
-        affiliation: "请输入机构相关信息，如名称",
-        publication: "请输入出版物相关信息，如名称"
-      };
-      return placeholders[this.searchMode];
-    }
-  },
   methods: {
+    updateSearchMode(mode: SearchModes) {
+      this.searchMode = mode;
+    },
     doSearch() {
       if (!this.searchKeyword) {
         this.$message.warning("请输入搜索内容");
@@ -124,11 +89,6 @@ h1 {
     font-size: 1.4rem;
     margin-top: 25px;
     text-align: center;
-  }
-
-  .homepage-header__input {
-    .pc-width__mobile(45vw);
-    .mobile-width(100%);
   }
 }
 </style>
