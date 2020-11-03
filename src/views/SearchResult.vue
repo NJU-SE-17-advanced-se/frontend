@@ -1,7 +1,7 @@
 <template>
-  <el-container @keydown.enter.native="doSearch">
+  <el-container @keydown.enter.native="doSearch" class="result-wrapper">
     <!--顶部工具栏-->
-    <el-header style="display: flex; align-items: center">
+    <el-header class="result-header" style="border-bottom: 10px black">
       <!--返回首页-->
       <el-button type="primary" @click="$router.push('/')">
         <i class="el-icon-back" /> 首页
@@ -24,6 +24,7 @@
         :mode="mode"
         :keyword="keyword"
         :page="currentPage"
+        class="result-content"
       />
       <!--分页-->
       <el-pagination
@@ -31,9 +32,9 @@
         :page-size="5"
         :total="totalPages"
         layout="prev, pager, next"
-        style="text-align: center"
-        @current-change="doSearch"
         :small="isPaginationSmall"
+        @current-change="doSearch"
+        class="result-pagination"
       />
     </el-main>
   </el-container>
@@ -106,3 +107,26 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style scoped lang="less">
+.result-wrapper {
+  height: 100%;
+  display: flex;
+
+  .result-header {
+    flex: 0 1 60px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .result-content {
+    flex: 1;
+  }
+
+  .result-pagination {
+    text-align: center;
+    flex: 0 1 60px;
+  }
+}
+</style>

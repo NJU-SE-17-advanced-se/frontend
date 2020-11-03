@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height: 400px">
+  <div>
     <el-card
       v-for="(paper, i) of papersBasicInfo"
       :key="i"
@@ -37,7 +37,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      papersBasicInfo: []
+      papersBasicInfo: [
+        { abs: "123" },
+        { abs: "123" },
+        { abs: "123" },
+        { abs: "123" },
+        { abs: "123" }
+      ]
     };
   },
   watch: {
