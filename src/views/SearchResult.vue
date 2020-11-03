@@ -33,6 +33,7 @@
         :total="totalPages"
         layout="prev, pager, next"
         :small="isPaginationSmall"
+        hide-on-single-page
         @current-change="doSearch"
         class="result-pagination"
       />
