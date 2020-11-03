@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="min-height: 400px">
     <el-card
       v-for="(paper, i) of papersBasicInfo"
       :key="i"

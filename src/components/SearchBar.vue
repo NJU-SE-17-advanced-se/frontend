@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Input, Option, Select } from "element-ui";
-import { SearchModes } from "@/interfaces/Search";
+import { SearchModes } from "@/interfaces/search";
 
 export default Vue.extend({
   name: "SearchBar",

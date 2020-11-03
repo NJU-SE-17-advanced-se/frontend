@@ -45,7 +45,7 @@ import { Container, Divider, Header, Main, Pagination } from "element-ui";
 import SearchBar from "@/components/SearchBar.vue";
 import SearchResultFactory from "@/components/search-result/SearchResultFactory";
 import { isMobile } from "@/utils/breakpoint";
-import { SearchModes } from "@/interfaces/Search";
+import { SearchModes } from "@/interfaces/search";
 
 export default Vue.extend({
   name: "SearchResult",

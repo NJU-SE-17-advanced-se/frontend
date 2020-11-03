@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchBar from "@/components/SearchBar.vue";
-import { SearchModes } from "@/interfaces/Search";
+import { SearchModes } from "@/interfaces/search";
 
 export default Vue.extend({
   name: "Search",
