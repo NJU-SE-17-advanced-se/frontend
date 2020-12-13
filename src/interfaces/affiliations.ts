@@ -1,7 +1,7 @@
 export interface AffiliationBasic {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
 }
 
 export interface Affiliation {

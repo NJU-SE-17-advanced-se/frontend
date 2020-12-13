@@ -55,109 +55,59 @@ export default Vue.extend({
       setTimeout(() => {
         this.papersBasicInfo = [
           {
-            id: "04a2b35024fdbe8439bdb115ea8c24e7",
+            id: "6880395",
             title:
-              "An Empirical Study Towards Characterizing Deep Learning Development and Deployment Across Different Frameworks and Platforms",
+              "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
             abs:
-              "Deep Learning (DL) has recently achieved tremendous success. A variety of DL frameworks and platforms play a key role to catalyze such progress. However, the differences in architecture designs and implementations of existing frameworks and platforms bring new challenges for DL software development and deployment. Till now, there is no study on how various mainstream frameworks and platforms influence both DL software development and deployment in practice. To fill this gap, we take the first step towards understanding how the most widely-used DL frameworks and platforms support the DL software development and deployment. We conduct a systematic study on these frameworks and platforms by using two types of DNN architectures and three popular datasets. (1) For development process, we investigate the prediction accuracy under the same runtime training configuration or same model weights/biases. We also study the adversarial robustness of trained models by leveraging the existing adversarial attack techniques. The experimental results show that the computing differences across frameworks could result in an obvious prediction accuracy decline, which should draw the attention of DL developers. (2) For deployment process, we investigate the prediction accuracy and performance (refers to time cost and memory consumption) when the trained models are migrated/quantized from PC to real mobile devices and web browsers. The DL platform study unveils that the migration and quantization still suffer from compatibility and reliability issues. Meanwhile, we find several DL software bugs by using the results as a benchmark. We further validate the results through bug confirmation from stakeholders and industrial positive feedback to highlight the implications of our study. Through our study, we summarize practical guidelines, identify challenges and pinpoint new research directions, such as understanding the characteristics of DL frameworks and platforms, avoiding compatibility and reliability issues, detecting DL software bugs, and reducing time cost and memory consumption towards developing and deploying high quality DL systems effectively.",
-            publication: "64db86c6db6cec0c858dcfaf66dfa8d6",
-            publicationDate: "2019",
-            citations: 2,
-            researchers: [
-              "IEEE_37085795499",
-              "IEEE_37086105481",
-              "IEEE_37086128415",
-              "IEEE_37086803095",
-              "IEEE_37086842777",
-              "IEEE_37086956653",
-              "IEEE_37086958122",
-              "IEEE_37087233505",
-              "IEEE_37087235413"
-            ]
+              "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
+            publication: "32_7004098",
+            publicationDate: "2015",
+            citations: 33,
+            researchers: ["37315742600", "37417468700"]
           },
           {
-            id: "04a2b35024fdbe8439bdb115ea8c24e7",
+            id: "6880395",
             title:
-              "An Empirical Study Towards Characterizing Deep Learning Development and Deployment Across Different Frameworks and Platforms",
+              "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
             abs:
-              "Deep Learning (DL) has recently achieved tremendous success. A variety of DL frameworks and platforms play a key role to catalyze such progress. However, the differences in architecture designs and implementations of existing frameworks and platforms bring new challenges for DL software development and deployment. Till now, there is no study on how various mainstream frameworks and platforms influence both DL software development and deployment in practice. To fill this gap, we take the first step towards understanding how the most widely-used DL frameworks and platforms support the DL software development and deployment. We conduct a systematic study on these frameworks and platforms by using two types of DNN architectures and three popular datasets. (1) For development process, we investigate the prediction accuracy under the same runtime training configuration or same model weights/biases. We also study the adversarial robustness of trained models by leveraging the existing adversarial attack techniques. The experimental results show that the computing differences across frameworks could result in an obvious prediction accuracy decline, which should draw the attention of DL developers. (2) For deployment process, we investigate the prediction accuracy and performance (refers to time cost and memory consumption) when the trained models are migrated/quantized from PC to real mobile devices and web browsers. The DL platform study unveils that the migration and quantization still suffer from compatibility and reliability issues. Meanwhile, we find several DL software bugs by using the results as a benchmark. We further validate the results through bug confirmation from stakeholders and industrial positive feedback to highlight the implications of our study. Through our study, we summarize practical guidelines, identify challenges and pinpoint new research directions, such as understanding the characteristics of DL frameworks and platforms, avoiding compatibility and reliability issues, detecting DL software bugs, and reducing time cost and memory consumption towards developing and deploying high quality DL systems effectively.",
-            publication: "64db86c6db6cec0c858dcfaf66dfa8d6",
-            publicationDate: "2019",
-            citations: 2,
-            researchers: [
-              "IEEE_37085795499",
-              "IEEE_37086105481",
-              "IEEE_37086128415",
-              "IEEE_37086803095",
-              "IEEE_37086842777",
-              "IEEE_37086956653",
-              "IEEE_37086958122",
-              "IEEE_37087233505",
-              "IEEE_37087235413"
-            ]
+              "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
+            publication: "32_7004098",
+            publicationDate: "2015",
+            citations: 33,
+            researchers: ["37315742600", "37417468700"]
           },
           {
-            id: "04a2b35024fdbe8439bdb115ea8c24e7",
+            id: "6880395",
             title:
-              "An Empirical Study Towards Characterizing Deep Learning Development and Deployment Across Different Frameworks and Platforms",
+              "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
             abs:
-              "Deep Learning (DL) has recently achieved tremendous success. A variety of DL frameworks and platforms play a key role to catalyze such progress. However, the differences in architecture designs and implementations of existing frameworks and platforms bring new challenges for DL software development and deployment. Till now, there is no study on how various mainstream frameworks and platforms influence both DL software development and deployment in practice. To fill this gap, we take the first step towards understanding how the most widely-used DL frameworks and platforms support the DL software development and deployment. We conduct a systematic study on these frameworks and platforms by using two types of DNN architectures and three popular datasets. (1) For development process, we investigate the prediction accuracy under the same runtime training configuration or same model weights/biases. We also study the adversarial robustness of trained models by leveraging the existing adversarial attack techniques. The experimental results show that the computing differences across frameworks could result in an obvious prediction accuracy decline, which should draw the attention of DL developers. (2) For deployment process, we investigate the prediction accuracy and performance (refers to time cost and memory consumption) when the trained models are migrated/quantized from PC to real mobile devices and web browsers. The DL platform study unveils that the migration and quantization still suffer from compatibility and reliability issues. Meanwhile, we find several DL software bugs by using the results as a benchmark. We further validate the results through bug confirmation from stakeholders and industrial positive feedback to highlight the implications of our study. Through our study, we summarize practical guidelines, identify challenges and pinpoint new research directions, such as understanding the characteristics of DL frameworks and platforms, avoiding compatibility and reliability issues, detecting DL software bugs, and reducing time cost and memory consumption towards developing and deploying high quality DL systems effectively.",
-            publication: "64db86c6db6cec0c858dcfaf66dfa8d6",
-            publicationDate: "2019",
-            citations: 2,
-            researchers: [
-              "IEEE_37085795499",
-              "IEEE_37086105481",
-              "IEEE_37086128415",
-              "IEEE_37086803095",
-              "IEEE_37086842777",
-              "IEEE_37086956653",
-              "IEEE_37086958122",
-              "IEEE_37087233505",
-              "IEEE_37087235413"
-            ]
+              "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
+            publication: "32_7004098",
+            publicationDate: "2015",
+            citations: 33,
+            researchers: ["37315742600", "37417468700"]
           },
           {
-            id: "04a2b35024fdbe8439bdb115ea8c24e7",
+            id: "6880395",
             title:
-              "An Empirical Study Towards Characterizing Deep Learning Development and Deployment Across Different Frameworks and Platforms",
+              "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
             abs:
-              "Deep Learning (DL) has recently achieved tremendous success. A variety of DL frameworks and platforms play a key role to catalyze such progress. However, the differences in architecture designs and implementations of existing frameworks and platforms bring new challenges for DL software development and deployment. Till now, there is no study on how various mainstream frameworks and platforms influence both DL software development and deployment in practice. To fill this gap, we take the first step towards understanding how the most widely-used DL frameworks and platforms support the DL software development and deployment. We conduct a systematic study on these frameworks and platforms by using two types of DNN architectures and three popular datasets. (1) For development process, we investigate the prediction accuracy under the same runtime training configuration or same model weights/biases. We also study the adversarial robustness of trained models by leveraging the existing adversarial attack techniques. The experimental results show that the computing differences across frameworks could result in an obvious prediction accuracy decline, which should draw the attention of DL developers. (2) For deployment process, we investigate the prediction accuracy and performance (refers to time cost and memory consumption) when the trained models are migrated/quantized from PC to real mobile devices and web browsers. The DL platform study unveils that the migration and quantization still suffer from compatibility and reliability issues. Meanwhile, we find several DL software bugs by using the results as a benchmark. We further validate the results through bug confirmation from stakeholders and industrial positive feedback to highlight the implications of our study. Through our study, we summarize practical guidelines, identify challenges and pinpoint new research directions, such as understanding the characteristics of DL frameworks and platforms, avoiding compatibility and reliability issues, detecting DL software bugs, and reducing time cost and memory consumption towards developing and deploying high quality DL systems effectively.",
-            publication: "64db86c6db6cec0c858dcfaf66dfa8d6",
-            publicationDate: "2019",
-            citations: 2,
-            researchers: [
-              "IEEE_37085795499",
-              "IEEE_37086105481",
-              "IEEE_37086128415",
-              "IEEE_37086803095",
-              "IEEE_37086842777",
-              "IEEE_37086956653",
-              "IEEE_37086958122",
-              "IEEE_37087233505",
-              "IEEE_37087235413"
-            ]
+              "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
+            publication: "32_7004098",
+            publicationDate: "2015",
+            citations: 33,
+            researchers: ["37315742600", "37417468700"]
           },
           {
-            id: "04a2b35024fdbe8439bdb115ea8c24e7",
+            id: "6880395",
             title:
-              "An Empirical Study Towards Characterizing Deep Learning Development and Deployment Across Different Frameworks and Platforms",
+              "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
             abs:
-              "Deep Learning (DL) has recently achieved tremendous success. A variety of DL frameworks and platforms play a key role to catalyze such progress. However, the differences in architecture designs and implementations of existing frameworks and platforms bring new challenges for DL software development and deployment. Till now, there is no study on how various mainstream frameworks and platforms influence both DL software development and deployment in practice. To fill this gap, we take the first step towards understanding how the most widely-used DL frameworks and platforms support the DL software development and deployment. We conduct a systematic study on these frameworks and platforms by using two types of DNN architectures and three popular datasets. (1) For development process, we investigate the prediction accuracy under the same runtime training configuration or same model weights/biases. We also study the adversarial robustness of trained models by leveraging the existing adversarial attack techniques. The experimental results show that the computing differences across frameworks could result in an obvious prediction accuracy decline, which should draw the attention of DL developers. (2) For deployment process, we investigate the prediction accuracy and performance (refers to time cost and memory consumption) when the trained models are migrated/quantized from PC to real mobile devices and web browsers. The DL platform study unveils that the migration and quantization still suffer from compatibility and reliability issues. Meanwhile, we find several DL software bugs by using the results as a benchmark. We further validate the results through bug confirmation from stakeholders and industrial positive feedback to highlight the implications of our study. Through our study, we summarize practical guidelines, identify challenges and pinpoint new research directions, such as understanding the characteristics of DL frameworks and platforms, avoiding compatibility and reliability issues, detecting DL software bugs, and reducing time cost and memory consumption towards developing and deploying high quality DL systems effectively.",
-            publication: "64db86c6db6cec0c858dcfaf66dfa8d6",
-            publicationDate: "2019",
-            citations: 2,
-            researchers: [
-              "IEEE_37085795499",
-              "IEEE_37086105481",
-              "IEEE_37086128415",
-              "IEEE_37086803095",
-              "IEEE_37086842777",
-              "IEEE_37086956653",
-              "IEEE_37086958122",
-              "IEEE_37087233505",
-              "IEEE_37087235413"
-            ]
+              "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
+            publication: "32_7004098",
+            publicationDate: "2015",
+            citations: 33,
+            researchers: ["37315742600", "37417468700"]
           }
         ];
         // 为了在 JSX 中解析，此处事件名称必须为 camelCase
@@ -177,7 +127,7 @@ export default Vue.extend({
 
 <style scoped lang="less">
 .wrapper {
-  min-height: 450px;
+  min-height: 70vh;
 
   .result-card {
     margin-bottom: 40px;

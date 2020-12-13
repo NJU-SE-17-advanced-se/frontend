@@ -70,7 +70,7 @@ h1 {
 }
 
 .homepage-header {
-  background-color: rgba(0.33, 0.33, 0.33, 11%);
+  // background-color: rgba(0.33, 0.33, 0.33, 11%);
   display: flex;
   align-items: center;
   justify-content: center;
