@@ -1,7 +1,7 @@
 <template>
   <el-container @keydown.enter.native="doSearch" class="result-wrapper">
     <!--顶部工具栏-->
-    <el-header class="result-header" style="border-bottom: 10px black">
+    <el-header class="result-header">
       <!--返回首页-->
       <el-button type="primary" @click="$router.push('/')">
         <i class="el-icon-back" /> 首页
@@ -13,6 +13,7 @@
         :mode="searchMode"
         :options="searchModeOptions"
         @mode-change="updateSearchMode"
+        @total-change="updateTotalPages"
         @search="doSearch"
       />
     </el-header>
@@ -30,7 +31,7 @@
       <el-pagination
         :current-page.sync="currentPage"
         :page-size="5"
-        :total="totalPages"
+        :total="total"
         layout="prev, pager, next"
         :small="isPaginationSmall"
         hide-on-single-page
@@ -80,7 +81,7 @@ export default Vue.extend({
       searchKeyword: this.keyword,
       // 搜索结果
       currentPage: Number(this.page),
-      totalPages: 50, // TODO: 暂时写死
+      total: 10, // TODO: 暂时写死为 2 页
       // 视图控制
       // 分页大小
       isPaginationSmall: isMobile()
@@ -90,6 +91,10 @@ export default Vue.extend({
     // 用于页面展示和页面数据更新
     updateSearchMode(mode: SearchModes) {
       this.searchMode = mode;
+    },
+    updateTotalPages(pages: number) {
+      console.log(pages);
+      this.total = pages;
     },
     // 触发搜索事件，修改 URL
     doSearch() {
@@ -119,6 +124,8 @@ export default Vue.extend({
     display: flex;
     align-items: center;
     padding: 10px;
+
+    border-bottom: 10px black;
   }
 
   .result-content {

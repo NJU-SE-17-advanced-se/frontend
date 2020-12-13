@@ -8,6 +8,6 @@ export default Vue.extend({
     this.$router.replace("/404");
   },
   render() {
-    return <div></div>;
+    return <div>Not Found</div>;
   }
 });
