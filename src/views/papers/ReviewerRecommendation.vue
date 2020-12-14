@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
     <el-header>
+      <el-button type="primary" style="float: left" @click="$router.go(-1)">
+        <i class="el-icon-back" /> 返回
+      </el-button>
       <h1 style="text-align: center">{{ tabTitle }}</h1>
     </el-header>
     <el-main>
