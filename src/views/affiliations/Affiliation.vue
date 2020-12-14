@@ -1,12 +1,12 @@
 <template>
-  <p>Profile: {{ id }}</p>
+  <p>Affiliation: {{ id }}</p>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "Profile",
+  name: "Affiliation",
   props: {
     id: String
   }

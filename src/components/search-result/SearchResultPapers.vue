@@ -17,7 +17,7 @@
     </div>
     <el-card v-for="(paper, i) of papersBasicInfo" :key="i" class="result-card">
       <template #header>
-        <router-link :to="paper.id">
+        <router-link :to="`/papers/${paper.id}`">
           <strong>{{ paper.title }}</strong>
         </router-link>
       </template>

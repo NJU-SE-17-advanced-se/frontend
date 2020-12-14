@@ -6,7 +6,7 @@
       class="result-card"
     >
       <template #header>
-        <router-link :to="researcher.id">
+        <router-link :to="`/researchers/${researcher.id}`">
           <strong>{{ researcher.name }}</strong>
         </router-link>
       </template>

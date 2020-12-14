@@ -21,7 +21,7 @@
       class="result-card"
     >
       <template #header>
-        <router-link :to="publication.id">
+        <router-link :to="`/publications/${publication.id}`">
           <strong>{{ publication.name }}</strong>
         </router-link>
       </template>

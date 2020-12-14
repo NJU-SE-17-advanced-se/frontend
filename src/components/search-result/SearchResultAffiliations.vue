@@ -6,7 +6,7 @@
       class="result-card"
     >
       <template #header>
-        <router-link :to="affiliation.id">
+        <router-link :to="`/affiliations/${affiliation.id}`">
           <strong>{{ affiliation.name }}</strong>
         </router-link>
       </template>

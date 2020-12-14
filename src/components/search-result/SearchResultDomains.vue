@@ -6,7 +6,7 @@
       class="result-card"
     >
       <template #header>
-        <router-link :to="domain.id">
+        <router-link :to="`/domains/${domain.id}`">
           <strong>{{ domain.name }}</strong>
         </router-link>
       </template>
