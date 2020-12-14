@@ -19,6 +19,11 @@ const router = new VueRouter({
       props: route => ({ ...route.params, ...route.query })
     },
     {
+      path: "/papers/reviewer-recommendation",
+      name: "审稿人推荐",
+      component: () => import("@/views/papers/ReviewerRecommendation.vue")
+    },
+    {
       path: "*",
       component: () => import("@/views/404.vue")
     }

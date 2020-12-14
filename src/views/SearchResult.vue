@@ -1,5 +1,5 @@
 <template>
-  <el-container @keydown.enter.native="doSearch" class="result-wrapper">
+  <el-container @keyup.enter.native="doSearch" class="result-wrapper">
     <!--顶部工具栏-->
     <el-header class="result-header">
       <!--返回首页-->
