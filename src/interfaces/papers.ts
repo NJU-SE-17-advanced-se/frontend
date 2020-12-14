@@ -20,3 +20,14 @@ export interface Paper {
   domains: string[];
   references: string[];
 }
+
+// 用于审稿人推荐的新论文
+export interface NewPaper {
+  abs: string;
+  date: number;
+  domainIds: string[];
+  publication: string;
+  referenceIds: string[];
+  researcherIds: string[];
+  title: string;
+}
