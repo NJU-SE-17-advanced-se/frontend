@@ -162,57 +162,57 @@ export default Vue.extend({
       },
       // 学者
       isResearchersLoading: false,
-      researchersToSelect: [],
+      researchersToSelect: [] as { id: string; name: string }[],
       // 领域
       isDomainsLoading: false,
-      domainsToSelect: [],
+      domainsToSelect: [] as { id: string; name: string }[],
       // 引用文献
       isReferencesLoading: false,
-      referencesToSelect: []
+      referencesToSelect: [] as { id: string; title: string }[]
     };
   },
   methods: {
-    getResearchersByKeyword(keyword) {
+    getResearchersByKeyword(keyword: string) {
       if (keyword) {
         this.isResearchersLoading = true;
         setTimeout(() => {
           // TODO: 如果出现同名学者，如何处理？增加信息？
           this.researchersToSelect = [
-            { id: 1, name: "Wen Sun 1" },
-            { id: 2, name: "Wen Sun 2" },
-            { id: 3, name: "Wen Sun 3" },
-            { id: 4, name: "Wen Sun 4" },
-            { id: 5, name: "Wen Sun 5" }
+            { id: "1", name: "Wen Sun 1" },
+            { id: "2", name: "Wen Sun 2" },
+            { id: "3", name: "Wen Sun 3" },
+            { id: "4", name: "Wen Sun 4" },
+            { id: "5", name: "Wen Sun 5" }
           ];
           this.isResearchersLoading = false;
         }, 500);
       }
     },
-    getDomainsByKeyword(keyword) {
+    getDomainsByKeyword(keyword: string) {
       if (keyword) {
         this.isDomainsLoading = true;
         setTimeout(() => {
           this.domainsToSelect = [
-            { id: 1, name: "Domain 1" },
-            { id: 2, name: "Domain 2" },
-            { id: 3, name: "Domain 3" },
-            { id: 4, name: "Domain 4" },
-            { id: 5, name: "Domain 5" }
+            { id: "1", name: "Domain 1" },
+            { id: "2", name: "Domain 2" },
+            { id: "3", name: "Domain 3" },
+            { id: "4", name: "Domain 4" },
+            { id: "5", name: "Domain 5" }
           ];
           this.isDomainsLoading = false;
         }, 500);
       }
     },
-    getReferencesByKeyword(keyword) {
+    getReferencesByKeyword(keyword: string) {
       if (keyword) {
         this.isReferencesLoading = true;
         setTimeout(() => {
           this.referencesToSelect = [
-            { id: 1, title: "Paper 1" },
-            { id: 2, title: "Paper 2" },
-            { id: 3, title: "Paper 3" },
-            { id: 4, title: "Paper 4" },
-            { id: 5, title: "Paper 5" }
+            { id: "1", title: "Paper 1" },
+            { id: "2", title: "Paper 2" },
+            { id: "3", title: "Paper 3" },
+            { id: "4", title: "Paper 4" },
+            { id: "5", title: "Paper 5" }
           ];
           this.isReferencesLoading = false;
         }, 500);
