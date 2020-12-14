@@ -12,6 +12,12 @@ const router = new VueRouter({
       name: "首页",
       component: () => import("@/views/Search.vue")
     },
+    // 放在这里提高匹配优先级，避免被画像页面覆盖
+    {
+      path: "/papers/reviewer-recommendation",
+      name: "审稿人推荐",
+      component: () => import("@/views/papers/ReviewerRecommendation.vue")
+    },
     {
       path: "/result/:mode",
       name: "搜索结果",
@@ -47,11 +53,6 @@ const router = new VueRouter({
       name: "学者详情",
       component: () => import("@/views/researchers/Researcher.vue"),
       props: route => ({ ...route.params })
-    },
-    {
-      path: "/papers/reviewer-recommendation",
-      name: "审稿人推荐",
-      component: () => import("@/views/papers/ReviewerRecommendation.vue")
     },
     {
       path: "*",
