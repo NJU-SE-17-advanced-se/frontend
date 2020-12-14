@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-loading="isLoading">
     <el-card
       v-for="(affiliation, i) of affiliationsBasicInfo"
       :key="i"
@@ -39,6 +39,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isLoading: false,
       affiliationsBasicInfo: [] as AffiliationBasic[]
     };
   },
@@ -57,6 +58,7 @@ export default Vue.extend({
     // 获取搜索结果
     fetchSearchResult(keyword: string, page = 1) {
       console.log("fetching", "affiliations", keyword, page);
+      this.isLoading = true;
       setTimeout(() => {
         this.affiliationsBasicInfo = [
           {
@@ -93,6 +95,7 @@ export default Vue.extend({
         // 为了在 JSX 中解析，此处事件名称必须为 camelCase
         // 并且我不想引入一个新的库
         this.$emit("totalChange", 50);
+        this.isLoading = false;
       }, 500);
     },
     getLimitedLengthDescription(desc: string) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-loading="isLoading">
     <el-card
       v-for="(domain, i) of domainsBasicInfo"
       :key="i"
@@ -31,6 +31,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isLoading: false,
       domainsBasicInfo: [] as DomainBasic[]
     };
   },
@@ -49,6 +50,7 @@ export default Vue.extend({
     // 获取搜索结果
     fetchSearchResult(keyword: string, page = 1) {
       console.log("fetching", "domains", keyword, page);
+      this.isLoading = true;
       setTimeout(() => {
         this.domainsBasicInfo = [
           {
@@ -75,6 +77,7 @@ export default Vue.extend({
         // 为了在 JSX 中解析，此处事件名称必须为 camelCase
         // 并且我不想引入一个新的库
         this.$emit("totalChange", 50);
+        this.isLoading = false;
       }, 500);
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-loading="isLoading">
     <div class="date-select">
       <el-date-picker
         v-model="startDate"
@@ -49,6 +49,7 @@ export default Vue.extend({
   data() {
     const currentYearStr = new Date().getFullYear().toString();
     return {
+      isLoading: false,
       startDate: currentYearStr,
       endDate: currentYearStr,
       publicationsBasicInfo: [] as PublicationBasic[]
@@ -112,6 +113,7 @@ export default Vue.extend({
         this.$message.error("开始年份不能在结束年份之后");
       } else {
         console.log("fetching", "publications", keyword, page);
+        this.isLoading = true;
         setTimeout(() => {
           this.publicationsBasicInfo = [
             {
@@ -143,6 +145,7 @@ export default Vue.extend({
           // 为了在 JSX 中解析，此处事件名称必须为 camelCase
           // 并且我不想引入一个新的库
           this.$emit("totalChange", 50);
+          this.isLoading = false;
         }, 500);
       }
     }
