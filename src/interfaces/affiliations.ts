@@ -7,7 +7,7 @@ export interface AffiliationBasic {
 export interface Affiliation {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   researchers: string[];
   papers: string[];
   domains: string[];

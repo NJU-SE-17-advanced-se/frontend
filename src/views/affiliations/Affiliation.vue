@@ -4,7 +4,7 @@
       <el-button type="primary" style="float: left" @click="$router.go(-1)">
         <i class="el-icon-back" /> 返回
       </el-button>
-      <h1 style="text-align: center">领域详情</h1>
+      <h1 style="text-align: center">机构详情</h1>
     </el-header>
     <el-main>
       <el-card class="result-card" v-loading="isLoading">
