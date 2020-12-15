@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Card, Header, Main, TabPane, Tabs } from "element-ui";
+import { Card, Header, Main } from "element-ui";
 import { Paper } from "@/interfaces/papers";
 
 export default Vue.extend({
@@ -60,9 +60,7 @@ export default Vue.extend({
   components: {
     [Card.name]: Card,
     [Header.name]: Header,
-    [Main.name]: Main,
-    [Tabs.name]: Tabs,
-    [TabPane.name]: TabPane
+    [Main.name]: Main
   },
   data() {
     return {
