@@ -18,7 +18,13 @@
             : "暂无简介"
         }}
       </p>
-      <el-button type="primary" class="result-button">详情</el-button>
+      <el-button
+        type="primary"
+        class="result-button"
+        @click="$router.push(`/affiliations/${affiliation.id}`)"
+      >
+        详情 <i class="el-icon-right" />
+      </el-button>
     </el-card>
   </div>
 </template>

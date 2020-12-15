@@ -16,7 +16,13 @@
       </p>
       <p><strong>Papers:</strong> {{ researcher.papers }}</p>
       <p><strong>Domains:</strong> {{ researcher.domains }}</p>
-      <el-button type="primary" class="result-button">详情</el-button>
+      <el-button
+        type="primary"
+        class="result-button"
+        @click="$router.push(`/researchers/${researcher.id}`)"
+      >
+        详情 <i class="el-icon-right" />
+      </el-button>
     </el-card>
   </div>
 </template>

@@ -26,7 +26,13 @@
         </router-link>
       </template>
       <p><strong>Publication:</strong> {{ publication.publicationDate }}</p>
-      <el-button type="primary" class="result-button">详情</el-button>
+      <el-button
+        type="primary"
+        class="result-button"
+        @click="$router.push(`/publications/${publication.id}`)"
+      >
+        详情 <i class="el-icon-right" />
+      </el-button>
     </el-card>
   </div>
 </template>

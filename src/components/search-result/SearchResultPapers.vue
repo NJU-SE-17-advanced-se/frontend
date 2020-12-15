@@ -28,7 +28,13 @@
       <p><strong>Authors:</strong> {{ paper.researchers }}</p>
       <p><strong>Abstract:</strong> {{ getLimitedLengthAbs(paper.abs) }}</p>
       <p><strong>Citation:</strong> {{ paper.citations }}</p>
-      <el-button type="primary" class="result-button">详情</el-button>
+      <el-button
+        type="primary"
+        class="result-button"
+        @click="$router.push(`/papers/${paper.id}`)"
+      >
+        详情 <i class="el-icon-right" />
+      </el-button>
     </el-card>
   </div>
 </template>
