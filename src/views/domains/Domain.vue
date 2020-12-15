@@ -69,3 +69,19 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style scoped lang="less">
+.wrapper {
+  min-height: 60vh;
+
+  .result-card {
+    min-height: 60vh;
+    margin-bottom: 20px;
+
+    .result-button {
+      float: right;
+      margin-bottom: 20px;
+    }
+  }
+}
+</style>
