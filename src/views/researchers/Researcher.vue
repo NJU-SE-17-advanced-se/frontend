@@ -12,12 +12,12 @@
         <template #header>
           <h2>{{ researcherInfo.name }}</h2>
         </template>
-        <p><strong>Researchers:</strong></p>
+        <p><strong>Affiliations:</strong></p>
         <ul
           v-for="(affiliation, i) of researcherInfo.affiliation"
           :key="'a' + i"
         >
-          <li>{{ researcher }}</li>
+          <li>{{ affiliation }}</li>
         </ul>
         <p><strong>Papers:</strong></p>
         <ul v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
