@@ -4,52 +4,46 @@
       <el-button type="primary" style="float: left" @click="$router.go(-1)">
         <i class="el-icon-back" /> 返回
       </el-button>
-      <h1 style="text-align: center">论文详情</h1>
+      <h1 style="text-align: center">{{ pageTitle }}</h1>
     </el-header>
     <el-main>
-      <!--论文详情-->
-      <el-card class="result-card" v-loading="isLoading">
-        <template #header>
-          <h2>{{ paperInfo.title }}</h2>
-        </template>
-        <p>
-          <strong>Publication:</strong>
-          {{ paperInfo.publication }}, {{ paperInfo.publicationDate }}
-        </p>
-        <p><strong>Authors:</strong> {{ paperInfo.researchers }}</p>
-        <p><strong>Abstract:</strong> {{ paperInfo.abs }}</p>
-        <p>
-          <strong>Link:</strong>
-          <a
-            :href="`https://${paperInfo.link}`"
-            target="_blank"
-            rel="noopener noreferer"
-          >
-            {{ paperInfo.link }}
-          </a>
-        </p>
-        <p><strong>Citation:</strong> {{ paperInfo.citations }}</p>
-        <p><strong>OASIS-impact:</strong> {{ paperImpact }}</p>
-      </el-card>
-      <!--引用关系-->
-      <el-card v-loading="isLoading">
-        <template #header>
-          <h3>引用关系</h3>
-        </template>
-        <ol v-if="paperInfo.references.length > 0">
-          <li v-for="(paper, i) of paperInfo.references" :key="i">
-            {{ paper }}
-          </li>
-        </ol>
-        <p v-else>暂无引用文献</p>
-      </el-card>
+      <el-tabs v-model="activeTabName">
+        <el-tab-pane label="论文详情" name="detail" lazy>
+          <el-card class="result-card" v-loading="isLoading">
+            <template #header>
+              <h2>{{ paperInfo.title }}</h2>
+            </template>
+            <p>
+              <strong>Publication:</strong>
+              {{ paperInfo.publication }}, {{ paperInfo.publicationDate }}
+            </p>
+            <p><strong>Authors:</strong> {{ paperInfo.researchers }}</p>
+            <p><strong>Abstract:</strong> {{ paperInfo.abs }}</p>
+            <p>
+              <strong>Link:</strong>
+              <a
+                :href="`https://${paperInfo.link}`"
+                target="_blank"
+                rel="noopener noreferer"
+              >
+                {{ paperInfo.link }}
+              </a>
+            </p>
+            <p><strong>Citation:</strong> {{ paperInfo.citations }}</p>
+            <p><strong>OASIS-impact:</strong> {{ paperImpact }}</p>
+          </el-card>
+        </el-tab-pane>
+        <el-tab-pane label="引用关系" name="citations" lazy>
+          <paper-references :references="paperInfo.references" />
+        </el-tab-pane>
+      </el-tabs>
     </el-main>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Card, Header, Main } from "element-ui";
+import { Card, Header, Main, TabPane, Tabs } from "element-ui";
 import { Paper } from "@/interfaces/papers";
 
 export default Vue.extend({
@@ -60,10 +54,14 @@ export default Vue.extend({
   components: {
     [Card.name]: Card,
     [Header.name]: Header,
-    [Main.name]: Main
+    [Main.name]: Main,
+    [Tabs.name]: Tabs,
+    [TabPane.name]: TabPane,
+    PaperReferences: () => import("@/components/PaperReferences.vue")
   },
   data() {
     return {
+      activeTabName: "detail",
       isLoading: false,
       paperInfo: {
         id: "",
@@ -79,6 +77,11 @@ export default Vue.extend({
       } as Paper,
       paperImpact: "分析中..."
     };
+  },
+  computed: {
+    pageTitle(): string {
+      return this.activeTabName === "detail" ? "论文详情" : "引用关系";
+    }
   },
   mounted() {
     this.isLoading = true;
