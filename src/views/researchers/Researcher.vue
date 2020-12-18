@@ -34,19 +34,19 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane label="历史论文" name="papers" lazy>
-          全部论文
+          <researcher-papers :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="历史机构" name="affiliations" lazy>
-          历史机构
+          <researcher-affiliations :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="历史领域" name="domains" lazy>
-          历史领域
+          <researcher-domains :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="领域预测" name="prediction" lazy>
-          领域预测
+          <researcher-domains-prediction :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="合作关系" name="partnership" lazy>
-          合作关系
+          <researcher-partnership :id="researcherInfo.id" />
         </el-tab-pane>
       </el-tabs>
     </el-main>
@@ -68,7 +68,15 @@ export default Vue.extend({
     [Header.name]: Header,
     [Main.name]: Main,
     [Tabs.name]: Tabs,
-    [TabPane.name]: TabPane
+    [TabPane.name]: TabPane,
+    ResearcherAffiliations: () =>
+      import("@/components/ResearcherAffiliations.vue"),
+    ResearcherDomains: () => import("@/components/ResearcherDomains.vue"),
+    ResearcherDomainsPrediction: () =>
+      import("@/components/ResearcherDomainsPrediction.vue"),
+    ResearcherPapers: () => import("@/components/ResearcherPapers.vue"),
+    ResearcherPartnership: () =>
+      import("@/components/ResearcherPartnership.vue")
   },
   data() {
     return {
