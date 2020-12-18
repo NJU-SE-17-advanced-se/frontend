@@ -4,12 +4,22 @@
     <template #header>
       <h3>引用关系</h3>
     </template>
+
+    <h4>引用文献</h4>
     <ol v-if="references.length > 0">
-      <li v-for="(paper, i) of references" :key="i">
+      <li v-for="(paper, i) of references" :key="'p' + i">
         {{ paper }}
       </li>
     </ol>
     <p v-else>暂无引用文献</p>
+
+    <h4>引用学者</h4>
+    <ul v-if="citedResearcherIds.length > 0">
+      <li v-for="(researchId, i) of citedResearcherIds" :key="'r' + i">
+        {{ researchId }}
+      </li>
+    </ul>
+    <p v-else>暂无引用学者</p>
   </el-card>
 </template>
 
@@ -20,6 +30,7 @@ import { Card } from "element-ui";
 export default Vue.extend({
   name: "PaperReferences",
   props: {
+    id: String,
     references: Array // types: string[]
   },
   components: {
@@ -27,8 +38,16 @@ export default Vue.extend({
   },
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      citedResearcherIds: [] as string[]
     };
+  },
+  mounted() {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.citedResearcherIds = ["1", "2", "3", "4", "5"];
+      this.isLoading = false;
+    }, 500);
   }
 });
 </script>

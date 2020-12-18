@@ -34,7 +34,10 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane label="引用关系" name="citations" lazy>
-          <paper-references :references="paperInfo.references" />
+          <paper-references
+            :id="paperInfo.id"
+            :references="paperInfo.references"
+          />
         </el-tab-pane>
       </el-tabs>
     </el-main>
