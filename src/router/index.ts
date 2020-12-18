@@ -22,7 +22,7 @@ const router = new VueRouter({
       path: "/result/:mode",
       name: "搜索结果",
       component: () => import("@/views/SearchResult.vue"),
-      props: route => ({ ...route.params })
+      props: route => ({ ...route.params, ...route.query })
     },
     {
       path: "/affiliations/:id",
