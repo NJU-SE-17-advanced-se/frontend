@@ -2,7 +2,7 @@
   <div class="wrapper">
     <el-card>
       <template #header>
-        <h3>该学者未来可能的研究方向</h3>
+        <h3>该学者未来可能的研究领域</h3>
       </template>
       <ul>
         <li v-for="domainId of domainIds" :key="domainId">

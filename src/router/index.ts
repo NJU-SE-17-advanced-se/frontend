@@ -16,7 +16,7 @@ const router = new VueRouter({
     {
       path: "/papers/reviewer-recommendation",
       name: "审稿人推荐",
-      component: () => import("@/views/papers/ReviewerRecommendation.vue")
+      component: () => import("@/views/PaperReviewerRecommendation.vue")
     },
     {
       path: "/result/:mode",
@@ -27,31 +27,31 @@ const router = new VueRouter({
     {
       path: "/affiliations/:id",
       name: "机构详情",
-      component: () => import("@/views/affiliations/Affiliation.vue"),
+      component: () => import("@/views/Affiliation.vue"),
       props: route => ({ ...route.params })
     },
     {
       path: "/domains/:id",
       name: "领域详情",
-      component: () => import("@/views/domains/Domain.vue"),
+      component: () => import("@/views/Domain.vue"),
       props: route => ({ ...route.params })
     },
     {
       path: "/papers/:id",
       name: "论文详情",
-      component: () => import("@/views/papers/Paper.vue"),
+      component: () => import("@/views/Paper.vue"),
       props: route => ({ ...route.params })
     },
     {
       path: "/publications/:id",
       name: "出版物详情",
-      component: () => import("@/views/publications/Publication.vue"),
+      component: () => import("@/views/Publication.vue"),
       props: route => ({ ...route.params })
     },
     {
       path: "/researchers/:id",
       name: "学者详情",
-      component: () => import("@/views/researchers/Researcher.vue"),
+      component: () => import("@/views/Researcher.vue"),
       props: route => ({ ...route.params })
     },
     {
