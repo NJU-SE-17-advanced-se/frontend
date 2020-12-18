@@ -4,37 +4,58 @@
       <el-button type="primary" style="float: left" @click="$router.go(-1)">
         <i class="el-icon-back" /> 返回
       </el-button>
-      <h1 style="text-align: center">学者详情</h1>
+      <h1 style="text-align: center">{{ pageTitle }}</h1>
     </el-header>
     <el-main>
-      <!--论文详情-->
-      <el-card class="result-card" v-loading="isLoading">
-        <template #header>
-          <h2>{{ researcherInfo.name }}</h2>
-        </template>
-        <p><strong>Affiliations:</strong></p>
-        <ul
-          v-for="(affiliation, i) of researcherInfo.affiliation"
-          :key="'a' + i"
-        >
-          <li>{{ affiliation }}</li>
-        </ul>
-        <p><strong>Papers:</strong></p>
-        <ul v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
-          <li>{{ paper }}</li>
-        </ul>
-        <p><strong>Domains:</strong></p>
-        <ul v-for="(domain, i) of researcherInfo.domains" :key="'d' + i">
-          <li>{{ domain }}</li>
-        </ul>
-      </el-card>
+      <el-tabs v-model="activeTabName">
+        <el-tab-pane label="学者详情" name="detail" lazy>
+          <el-card class="result-card" v-loading="isLoading">
+            <template #header>
+              <h2>{{ researcherInfo.name }}</h2>
+            </template>
+            <p><strong>OASIS-impact:</strong> {{ researcherImpact }}</p>
+            <!--全部机构-->
+            <p><strong>Affiliations:</strong></p>
+            <ul
+              v-for="(affiliation, i) of researcherInfo.affiliation"
+              :key="'a' + i"
+            >
+              <li>{{ affiliation }}</li>
+            </ul>
+            <!--代表作-->
+            <p><strong>5 Selected Papers:</strong></p>
+            <ul v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
+              <li>{{ paper }}</li>
+            </ul>
+            <p><strong>Domains:</strong></p>
+            <ul v-for="(domain, i) of researcherInfo.domains" :key="'d' + i">
+              <li>{{ domain }}</li>
+            </ul>
+          </el-card>
+        </el-tab-pane>
+        <el-tab-pane label="历史论文" name="papers" lazy>
+          全部论文
+        </el-tab-pane>
+        <el-tab-pane label="历史机构" name="affiliations" lazy>
+          历史机构
+        </el-tab-pane>
+        <el-tab-pane label="历史领域" name="domains" lazy>
+          历史领域
+        </el-tab-pane>
+        <el-tab-pane label="领域预测" name="prediction" lazy>
+          领域预测
+        </el-tab-pane>
+        <el-tab-pane label="合作关系" name="partnership" lazy>
+          合作关系
+        </el-tab-pane>
+      </el-tabs>
     </el-main>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Card, Header, Main } from "element-ui";
+import { Card, Header, Main, TabPane, Tabs } from "element-ui";
 import { Researcher } from "@/interfaces/researchers";
 
 export default Vue.extend({
@@ -45,10 +66,13 @@ export default Vue.extend({
   components: {
     [Card.name]: Card,
     [Header.name]: Header,
-    [Main.name]: Main
+    [Main.name]: Main,
+    [Tabs.name]: Tabs,
+    [TabPane.name]: TabPane
   },
   data() {
     return {
+      activeTabName: "detail",
       isLoading: false,
       researcherInfo: {
         id: "",
@@ -56,8 +80,29 @@ export default Vue.extend({
         affiliation: [],
         papers: [],
         domains: []
-      } as Researcher
+      } as Researcher,
+      researcherImpact: "分析中..."
     };
+  },
+  computed: {
+    pageTitle(): string {
+      switch (this.activeTabName) {
+        case "detail":
+          return "学者详情";
+        case "papers":
+          return "历史论文";
+        case "affiliations":
+          return "历史机构";
+        case "domains":
+          return "历史领域";
+        case "prediction":
+          return "领域预测";
+        case "partnership":
+          return "合作关系";
+        default:
+          return "未知";
+      }
+    }
   },
   mounted() {
     this.isLoading = true;
@@ -75,6 +120,9 @@ export default Vue.extend({
         ]
       };
       this.isLoading = false;
+    }, 500);
+    setTimeout(() => {
+      this.researcherImpact = (9.89).toString();
     }, 500);
   }
 });
