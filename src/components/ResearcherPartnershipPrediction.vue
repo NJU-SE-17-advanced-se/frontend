@@ -2,21 +2,7 @@
   <div class="wrapper">
     <el-card>
       <template #header>
-        <div class="date-select">
-          <el-date-picker
-            v-model="startDate"
-            type="year"
-            placeholder="开始年份"
-            value-format="yyyy"
-          />
-          -
-          <el-date-picker
-            v-model="endDate"
-            type="year"
-            placeholder="结束年份"
-            value-format="yyyy"
-          />
-        </div>
+        <h3>该学者未来可能的合作学者</h3>
       </template>
       <ul>
         <li v-for="id of partnershipIds" :key="id">
@@ -32,7 +18,7 @@ import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
 
 export default Vue.extend({
-  name: "ResearcherPartnership",
+  name: "ResearcherPartnershipPrediction",
   props: {
     id: String
   },

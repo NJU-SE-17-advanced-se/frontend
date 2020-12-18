@@ -42,11 +42,14 @@
         <el-tab-pane label="历史领域" name="domains" lazy>
           <researcher-domains :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="领域预测" name="prediction" lazy>
+        <el-tab-pane label="历史合作" name="partnership" lazy>
+          <researcher-partnership :id="researcherInfo.id" />
+        </el-tab-pane>
+        <el-tab-pane label="领域预测" name="domain-prediction" lazy>
           <researcher-domains-prediction :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="合作关系" name="partnership" lazy>
-          <researcher-partnership :id="researcherInfo.id" />
+        <el-tab-pane label="合作预测" name="partnership-prediction" lazy>
+          <researcher-partnership-prediction :id="researcherInfo.id" />
         </el-tab-pane>
       </el-tabs>
     </el-main>
@@ -76,7 +79,9 @@ export default Vue.extend({
       import("@/components/ResearcherDomainsPrediction.vue"),
     ResearcherPapers: () => import("@/components/ResearcherPapers.vue"),
     ResearcherPartnership: () =>
-      import("@/components/ResearcherPartnership.vue")
+      import("@/components/ResearcherPartnership.vue"),
+    ResearcherPartnershipPrediction: () =>
+      import("@/components/ResearcherPartnershipPrediction.vue")
   },
   data() {
     return {
@@ -103,10 +108,12 @@ export default Vue.extend({
           return "历史机构";
         case "domains":
           return "历史领域";
-        case "prediction":
+        case "domain-prediction":
           return "领域预测";
         case "partnership":
           return "合作关系";
+        case "partnership-prediction":
+          return "合作预测";
         default:
           return "未知";
       }
