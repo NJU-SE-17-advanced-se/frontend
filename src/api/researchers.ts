@@ -3,7 +3,12 @@ import { Researcher } from "@/interfaces/researchers";
 import { PaperBasic } from "@/interfaces/papers";
 
 // 搜索学者
-async function search(keyword: string, page = 1): Promise<string[]> {
+interface ResearcherSearchRes {
+  count: number;
+  result: string[];
+}
+
+async function search(keyword: string, page = 1): Promise<ResearcherSearchRes> {
   const { data } = await axios.get(`/entity-researcher/researchers`, {
     params: { keyword, page }
   });

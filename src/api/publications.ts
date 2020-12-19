@@ -2,12 +2,17 @@ import axios from "@/config/axios";
 import { Publication, PublicationBasic } from "@/interfaces/publications";
 
 // 搜索出版物
+interface PublicationSearchRes {
+  count: number;
+  result: string[];
+}
+
 async function search(
   keyword: string,
   start?: string,
   end?: string,
   page = 1
-): Promise<string[]> {
+): Promise<PublicationSearchRes> {
   const { data } = await axios.get(`/entity-publication/publications`, {
     params: { keyword, start, end, page }
   });

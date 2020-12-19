@@ -2,12 +2,17 @@ import axios from "@/config/axios";
 import { NewPaper, Paper, PaperBasic } from "@/interfaces/papers";
 
 // 搜索论文
+interface PaperSearchRes {
+  count: number;
+  ids: string[];
+}
+
 async function search(
   keyword: string,
   start?: string,
   end?: string,
   page = 1
-): Promise<string[]> {
+): Promise<PaperSearchRes> {
   const { data } = await axios.get(`/entity-paper/papers`, {
     params: { keyword, start, end, page }
   });

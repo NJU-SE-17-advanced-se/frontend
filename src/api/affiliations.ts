@@ -2,7 +2,15 @@ import axios from "@/config/axios";
 import { Affiliation, AffiliationBasic } from "@/interfaces/affiliations";
 
 // 搜索机构
-async function search(keyword: string, page = 1): Promise<string[]> {
+interface AffiliationSearchRes {
+  count: number;
+  result: string[];
+}
+
+async function search(
+  keyword: string,
+  page = 1
+): Promise<AffiliationSearchRes> {
   const { data } = await axios.get(`/entity-affiliation/affiliations`, {
     params: { keyword, page }
   });

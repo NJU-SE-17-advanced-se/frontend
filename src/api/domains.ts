@@ -2,7 +2,12 @@ import axios from "@/config/axios";
 import { Domain, DomainBasic } from "@/interfaces/domains";
 
 // 搜索领域
-async function search(keyword: string, page = 1): Promise<string[]> {
+interface DomainSearchRes {
+  count: number;
+  ids: string[];
+}
+
+async function search(keyword: string, page = 1): Promise<DomainSearchRes> {
   const { data } = await axios.get(`/entity-domain/domains`, {
     params: { keyword, page }
   });
