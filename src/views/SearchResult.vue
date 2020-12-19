@@ -13,7 +13,6 @@
         :mode="searchMode"
         :options="searchModeOptions"
         @mode-change="updateSearchMode"
-        @total-change="updateTotalPages"
         @search="doSearch"
       />
     </el-header>
@@ -25,12 +24,13 @@
         :mode="mode"
         :keyword="keyword"
         :page="currentPage"
+        @total-change="updateTotalPages"
         class="result-content"
       />
-      <!--分页-->
+      <!--分页，每页 10 条-->
       <el-pagination
         :current-page.sync="currentPage"
-        :page-size="5"
+        :page-size="10"
         :total="total"
         layout="prev, pager, next"
         :small="isPaginationSmall"
@@ -81,7 +81,7 @@ export default Vue.extend({
       searchKeyword: this.keyword,
       // 搜索结果
       currentPage: Number(this.page),
-      total: 10, // TODO: 暂时写死为 2 页
+      total: 0,
       // 视图控制
       // 分页大小
       isPaginationSmall: isMobile()
