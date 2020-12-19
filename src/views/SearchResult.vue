@@ -93,7 +93,6 @@ export default Vue.extend({
       this.searchMode = mode;
     },
     updateTotalPages(pages: number) {
-      console.log(pages);
       this.total = pages;
     },
     // 触发搜索事件，修改 URL
