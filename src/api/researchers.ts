@@ -1,6 +1,5 @@
 import axios from "@/config/axios";
-import { Researcher } from "@/interfaces/researchers";
-import { PaperBasic } from "@/interfaces/papers";
+import { Researcher, ResearcherBasic } from "@/interfaces/researchers";
 import { ApiResponse } from "@/interfaces/common";
 import { errorMsg } from "@/utils/message";
 import { apiWrapper } from "@/utils/wrapper";
@@ -52,7 +51,9 @@ async function getAffiliationsByTimeRange(
 }
 
 // 根据 id 获取学者基本信息
-async function getBasicInfoById(id: string): Promise<ApiResponse<PaperBasic>> {
+async function getBasicInfoById(
+  id: string
+): Promise<ApiResponse<ResearcherBasic>> {
   const { status, data } = await axios.get(
     `/entity-researcher/researchers/${id}/basic-info`
   );

@@ -19,9 +19,9 @@ interface PublicationSearchRes {
 
 async function search(
   keyword: string,
+  page = 1,
   start?: string,
-  end?: string,
-  page = 1
+  end?: string
 ): Promise<ApiResponse<PublicationSearchRes>> {
   const { status, data } = await axios.get(`/entity-publication/publications`, {
     params: { keyword, start, end, page }

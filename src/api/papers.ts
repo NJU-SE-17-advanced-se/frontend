@@ -19,9 +19,9 @@ interface PaperSearchRes {
 
 async function search(
   keyword: string,
+  page = 1,
   start?: string,
-  end?: string,
-  page = 1
+  end?: string
 ): Promise<ApiResponse<PaperSearchRes>> {
   const { status, data } = await axios.get(`/entity-paper/papers`, {
     params: { keyword, start, end, page }
