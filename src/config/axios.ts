@@ -1,13 +1,13 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const allowStatusCodes = [504];
+const allowStatusCodes = [404, 504];
 
 const globalConfig: AxiosRequestConfig = {
   baseURL:
     process.env.NODE_ENV === "production"
       ? "https://wensun.top/api"
       : "http://localhost:8393/api",
-  timeout: 2.5 * 1000, // 2.5s
+  timeout: 10 * 1000, // 总请求时间不超过 10s
   validateStatus(status) {
     return (status >= 200 && status < 300) || allowStatusCodes.includes(status);
   }
