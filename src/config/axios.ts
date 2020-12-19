@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const globalConfig = {
-  baseURL: "https://wensun.top/api",
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://wensun.top/api"
+      : "http://localhost:8393/api",
   timeout: 15 * 1000
   // 如果启用凭据，后端必须在AllowOrigin里指定源，而不能是*
   // withCredentials: true

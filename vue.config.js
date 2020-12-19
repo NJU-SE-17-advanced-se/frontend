@@ -36,6 +36,12 @@ module.exports = {
   devServer: {
     https: false,
     open: true,
-    port: 8393
+    port: 8393,
+    proxy: {
+      "/api": {
+        target: "https://wensun.top",
+        changeOrigin: true
+      }
+    }
   }
 };
