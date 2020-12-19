@@ -1,29 +1,32 @@
 <template>
   <div class="wrapper" v-loading="isLoading">
-    <el-card
-      v-for="(researcher, i) of researchersBasicInfo"
-      :key="i"
-      class="result-card"
-    >
-      <template #header>
-        <router-link :to="`/researchers/${researcher.id}`">
-          <strong>{{ researcher.name }}</strong>
-        </router-link>
-      </template>
-      <p>
-        <strong>Affiliations:</strong>
-        {{ researcher.affiliation }}
-      </p>
-      <p><strong>Papers:</strong> {{ researcher.papers }}</p>
-      <p><strong>Domains:</strong> {{ researcher.domains }}</p>
-      <el-button
-        type="primary"
-        class="result-button"
-        @click="$router.push(`/researchers/${researcher.id}`)"
+    <template v-if="researchersBasicInfo.length > 0">
+      <el-card
+        v-for="(researcher, i) of researchersBasicInfo"
+        :key="i"
+        class="result-card"
       >
-        详情 <i class="el-icon-right" />
-      </el-button>
-    </el-card>
+        <template #header>
+          <router-link :to="`/researchers/${researcher.id}`">
+            <strong>{{ researcher.name }}</strong>
+          </router-link>
+        </template>
+        <p>
+          <strong>Affiliations:</strong>
+          {{ researcher.affiliation }}
+        </p>
+        <p><strong>Papers:</strong> {{ researcher.papers }}</p>
+        <p><strong>Domains:</strong> {{ researcher.domains }}</p>
+        <el-button
+          type="primary"
+          class="result-button"
+          @click="$router.push(`/researchers/${researcher.id}`)"
+        >
+          详情 <i class="el-icon-right" />
+        </el-button>
+      </el-card>
+    </template>
+    <p v-else style="text-align: center; line-height: 70vh">暂无结果……</p>
   </div>
 </template>
 
@@ -31,6 +34,7 @@
 import Vue from "vue";
 import { Card } from "element-ui";
 import { ResearcherBasic } from "@/interfaces/researchers";
+import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "SearchResultResearchers",
@@ -60,162 +64,31 @@ export default Vue.extend({
   },
   methods: {
     // 获取搜索结果
-    fetchSearchResult(keyword: string, page = 1) {
-      console.log("fetching", "publications", keyword, page);
+    async fetchSearchResult(keyword: string, page = 1) {
+      console.log("fetching", "researchers", keyword, page);
       this.isLoading = true;
-      setTimeout(() => {
-        this.researchersBasicInfo = [
-          {
-            id: "37085493646",
-            name: "Jun Sun",
-            affiliation: [
-              "15eab2386ce336f6400882f31a7d983b",
-              "2909598c2cfa81a4d1e2416e7e98b7e6",
-              "f6202fe0cd85555ca7f9aa66ea9891d7"
-            ],
-            papers: ["8115652", "7371996", "8115657", "8115689", "8115690"],
-            domains: [
-              "19fc833ffe525d768089c7327a6e73d5",
-              "6bdb7dbddcd02a417438b5bbfe421548",
-              "cc801bd8b3e2970a29e5346ff2068dc8",
-              "040c40f463cdc06ada8ce410af3660cd",
-              "1c3abc1b9a938b3d89f1f3a504d9eb40",
-              "d52387880e1ea22817a72d3759213819",
-              "dea0a476bf5226975bf9ae2076aa5c4a",
-              "0a7ee1ff73ce79a8a41000817f196eaa",
-              "250578a8829fa22053c85ec827c952f5",
-              "467ffcb9fcbaefca498ccb9dca64ae0b",
-              "59af87a0d3e20648d118a012f78a7a64",
-              "fcdce8503adaff3a698b808c18a61508",
-              "5e6db9c70b8e1f48c8a6ef3949377851",
-              "ae506cdc364fa9ba0b8184d8e2245d2c",
-              "c9847bb8b7875a4a0b995ae9b6bc45f6",
-              "f28059135382420bdcca0b59acdbb85b",
-              "1c9ee2ad18f6f7d86fabd4bb09672f60"
-            ]
-          },
-          {
-            id: "37085493646",
-            name: "Jun Sun",
-            affiliation: [
-              "15eab2386ce336f6400882f31a7d983b",
-              "2909598c2cfa81a4d1e2416e7e98b7e6",
-              "f6202fe0cd85555ca7f9aa66ea9891d7"
-            ],
-            papers: ["8115652", "7371996", "8115657", "8115689", "8115690"],
-            domains: [
-              "19fc833ffe525d768089c7327a6e73d5",
-              "6bdb7dbddcd02a417438b5bbfe421548",
-              "cc801bd8b3e2970a29e5346ff2068dc8",
-              "040c40f463cdc06ada8ce410af3660cd",
-              "1c3abc1b9a938b3d89f1f3a504d9eb40",
-              "d52387880e1ea22817a72d3759213819",
-              "dea0a476bf5226975bf9ae2076aa5c4a",
-              "0a7ee1ff73ce79a8a41000817f196eaa",
-              "250578a8829fa22053c85ec827c952f5",
-              "467ffcb9fcbaefca498ccb9dca64ae0b",
-              "59af87a0d3e20648d118a012f78a7a64",
-              "fcdce8503adaff3a698b808c18a61508",
-              "5e6db9c70b8e1f48c8a6ef3949377851",
-              "ae506cdc364fa9ba0b8184d8e2245d2c",
-              "c9847bb8b7875a4a0b995ae9b6bc45f6",
-              "f28059135382420bdcca0b59acdbb85b",
-              "1c9ee2ad18f6f7d86fabd4bb09672f60"
-            ]
-          },
-          {
-            id: "37085493646",
-            name: "Jun Sun",
-            affiliation: [
-              "15eab2386ce336f6400882f31a7d983b",
-              "2909598c2cfa81a4d1e2416e7e98b7e6",
-              "f6202fe0cd85555ca7f9aa66ea9891d7"
-            ],
-            papers: ["8115652", "7371996", "8115657", "8115689", "8115690"],
-            domains: [
-              "19fc833ffe525d768089c7327a6e73d5",
-              "6bdb7dbddcd02a417438b5bbfe421548",
-              "cc801bd8b3e2970a29e5346ff2068dc8",
-              "040c40f463cdc06ada8ce410af3660cd",
-              "1c3abc1b9a938b3d89f1f3a504d9eb40",
-              "d52387880e1ea22817a72d3759213819",
-              "dea0a476bf5226975bf9ae2076aa5c4a",
-              "0a7ee1ff73ce79a8a41000817f196eaa",
-              "250578a8829fa22053c85ec827c952f5",
-              "467ffcb9fcbaefca498ccb9dca64ae0b",
-              "59af87a0d3e20648d118a012f78a7a64",
-              "fcdce8503adaff3a698b808c18a61508",
-              "5e6db9c70b8e1f48c8a6ef3949377851",
-              "ae506cdc364fa9ba0b8184d8e2245d2c",
-              "c9847bb8b7875a4a0b995ae9b6bc45f6",
-              "f28059135382420bdcca0b59acdbb85b",
-              "1c9ee2ad18f6f7d86fabd4bb09672f60"
-            ]
-          },
-          {
-            id: "37085493646",
-            name: "Jun Sun",
-            affiliation: [
-              "15eab2386ce336f6400882f31a7d983b",
-              "2909598c2cfa81a4d1e2416e7e98b7e6",
-              "f6202fe0cd85555ca7f9aa66ea9891d7"
-            ],
-            papers: ["8115652", "7371996", "8115657", "8115689", "8115690"],
-            domains: [
-              "19fc833ffe525d768089c7327a6e73d5",
-              "6bdb7dbddcd02a417438b5bbfe421548",
-              "cc801bd8b3e2970a29e5346ff2068dc8",
-              "040c40f463cdc06ada8ce410af3660cd",
-              "1c3abc1b9a938b3d89f1f3a504d9eb40",
-              "d52387880e1ea22817a72d3759213819",
-              "dea0a476bf5226975bf9ae2076aa5c4a",
-              "0a7ee1ff73ce79a8a41000817f196eaa",
-              "250578a8829fa22053c85ec827c952f5",
-              "467ffcb9fcbaefca498ccb9dca64ae0b",
-              "59af87a0d3e20648d118a012f78a7a64",
-              "fcdce8503adaff3a698b808c18a61508",
-              "5e6db9c70b8e1f48c8a6ef3949377851",
-              "ae506cdc364fa9ba0b8184d8e2245d2c",
-              "c9847bb8b7875a4a0b995ae9b6bc45f6",
-              "f28059135382420bdcca0b59acdbb85b",
-              "1c9ee2ad18f6f7d86fabd4bb09672f60"
-            ]
-          },
-          {
-            id: "37085493646",
-            name: "Jun Sun",
-            affiliation: [
-              "15eab2386ce336f6400882f31a7d983b",
-              "2909598c2cfa81a4d1e2416e7e98b7e6",
-              "f6202fe0cd85555ca7f9aa66ea9891d7"
-            ],
-            papers: ["8115652", "7371996", "8115657", "8115689", "8115690"],
-            domains: [
-              "19fc833ffe525d768089c7327a6e73d5",
-              "6bdb7dbddcd02a417438b5bbfe421548",
-              "cc801bd8b3e2970a29e5346ff2068dc8",
-              "040c40f463cdc06ada8ce410af3660cd",
-              "1c3abc1b9a938b3d89f1f3a504d9eb40",
-              "d52387880e1ea22817a72d3759213819",
-              "dea0a476bf5226975bf9ae2076aa5c4a",
-              "0a7ee1ff73ce79a8a41000817f196eaa",
-              "250578a8829fa22053c85ec827c952f5",
-              "467ffcb9fcbaefca498ccb9dca64ae0b",
-              "59af87a0d3e20648d118a012f78a7a64",
-              "fcdce8503adaff3a698b808c18a61508",
-              "5e6db9c70b8e1f48c8a6ef3949377851",
-              "ae506cdc364fa9ba0b8184d8e2245d2c",
-              "c9847bb8b7875a4a0b995ae9b6bc45f6",
-              "f28059135382420bdcca0b59acdbb85b",
-              "1c9ee2ad18f6f7d86fabd4bb09672f60"
-            ]
-          }
-        ];
-        // 为了在 JSX 中解析，此处事件名称必须为 camelCase
-        // 并且我不想引入一个新的库
-        this.$emit("totalChange", 50);
-        this.isLoading = false;
-      }, 500);
+      const researcherSearchRes = await ResearcherAPI.search(keyword, page);
+      const researcherIds = researcherSearchRes.data.result;
+      // 每一页数量必然在 0 - 10（约定）
+      const researchersBasicInfoReqs = researcherIds.map(id =>
+        ResearcherAPI.getBasicInfoById(id)
+      );
+      // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+      const reqBatch1 = Promise.all(researchersBasicInfoReqs.slice(0, 4));
+      const reqBatch2 = Promise.all(researchersBasicInfoReqs.slice(4, 7));
+      const reqBatch3 = Promise.all(researchersBasicInfoReqs.slice(7, 10));
+      const res1 = await reqBatch1;
+      const res2 = await reqBatch2;
+      const res3 = await reqBatch3;
+      this.researchersBasicInfo = [
+        ...res1.map(res => res.data),
+        ...res2.map(res => res.data),
+        ...res3.map(res => res.data)
+      ];
+      // 为了在 JSX 中解析，此处事件名称必须为 camelCase
+      // 并且我不想引入一个新的库
+      this.$emit("totalChange", 50);
+      this.isLoading = false;
     }
   }
 });

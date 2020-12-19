@@ -15,25 +15,28 @@
         value-format="yyyy"
       />
     </div>
-    <el-card
-      v-for="(publication, i) of publicationsBasicInfo"
-      :key="i"
-      class="result-card"
-    >
-      <template #header>
-        <router-link :to="`/publications/${publication.id}`">
-          <strong>{{ publication.name }}</strong>
-        </router-link>
-      </template>
-      <p><strong>Publication:</strong> {{ publication.publicationDate }}</p>
-      <el-button
-        type="primary"
-        class="result-button"
-        @click="$router.push(`/publications/${publication.id}`)"
+    <template v-if="publicationsBasicInfo.length > 0">
+      <el-card
+        v-for="(publication, i) of publicationsBasicInfo"
+        :key="i"
+        class="result-card"
       >
-        详情 <i class="el-icon-right" />
-      </el-button>
-    </el-card>
+        <template #header>
+          <router-link :to="`/publications/${publication.id}`">
+            <strong>{{ publication.name }}</strong>
+          </router-link>
+        </template>
+        <p><strong>Publication:</strong> {{ publication.publicationDate }}</p>
+        <el-button
+          type="primary"
+          class="result-button"
+          @click="$router.push(`/publications/${publication.id}`)"
+        >
+          详情 <i class="el-icon-right" />
+        </el-button>
+      </el-card>
+    </template>
+    <p v-else style="text-align: center; line-height: 70vh">暂无结果……</p>
   </div>
 </template>
 
@@ -41,6 +44,8 @@
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
 import { PublicationBasic } from "@/interfaces/publications";
+import { errorMsg } from "@/utils/message";
+import PublicationAPI from "@/api/publications";
 
 export default Vue.extend({
   name: "SearchResultPublications",
@@ -105,54 +110,48 @@ export default Vue.extend({
   },
   methods: {
     // 获取搜索结果
-    fetchSearchResult(
+    async fetchSearchResult(
       keyword: string,
       page: number,
       start?: string,
       end?: string
     ) {
       if (!start) {
-        this.$message.error("请选择开始年份");
+        errorMsg("请选择开始年份");
       } else if (!end) {
-        this.$message.error("请选择结束年份");
+        errorMsg("请选择结束年份");
       } else if (new Date(start) > new Date(end)) {
-        this.$message.error("开始年份不能在结束年份之后");
+        errorMsg("开始年份不能在结束年份之后");
       } else {
         console.log("fetching", "publications", keyword, page);
         this.isLoading = true;
-        setTimeout(() => {
-          this.publicationsBasicInfo = [
-            {
-              id: "32_7004098",
-              name: "IEEE Transactions on Software Engineering",
-              publicationDate: "2015"
-            },
-            {
-              id: "32_7004098",
-              name: "IEEE Transactions on Software Engineering",
-              publicationDate: "2015"
-            },
-            {
-              id: "32_7004098",
-              name: "IEEE Transactions on Software Engineering",
-              publicationDate: "2015"
-            },
-            {
-              id: "32_7004098",
-              name: "IEEE Transactions on Software Engineering",
-              publicationDate: "2015"
-            },
-            {
-              id: "32_7004098",
-              name: "IEEE Transactions on Software Engineering",
-              publicationDate: "2015"
-            }
-          ];
-          // 为了在 JSX 中解析，此处事件名称必须为 camelCase
-          // 并且我不想引入一个新的库
-          this.$emit("totalChange", 50);
-          this.isLoading = false;
-        }, 500);
+        const publicationSearchRes = await PublicationAPI.search(
+          keyword,
+          page,
+          start,
+          end
+        );
+        const publicationIds = publicationSearchRes.data.result;
+        // 每一页数量必然在 0 - 10（约定）
+        const publicationsBasicInfoReqs = publicationIds.map(id =>
+          PublicationAPI.getBasicInfoById(id)
+        );
+        // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+        const reqBatch1 = Promise.all(publicationsBasicInfoReqs.slice(0, 4));
+        const reqBatch2 = Promise.all(publicationsBasicInfoReqs.slice(4, 7));
+        const reqBatch3 = Promise.all(publicationsBasicInfoReqs.slice(7, 10));
+        const res1 = await reqBatch1;
+        const res2 = await reqBatch2;
+        const res3 = await reqBatch3;
+        this.publicationsBasicInfo = [
+          ...res1.map(res => res.data),
+          ...res2.map(res => res.data),
+          ...res3.map(res => res.data)
+        ];
+        // 为了在 JSX 中解析，此处事件名称必须为 camelCase
+        // 并且我不想引入一个新的库
+        this.$emit("totalChange", publicationSearchRes.data.count);
+        this.isLoading = false;
       }
     }
   }

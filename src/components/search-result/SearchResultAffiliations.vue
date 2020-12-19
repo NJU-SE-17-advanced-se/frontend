@@ -1,31 +1,34 @@
 <template>
   <div class="wrapper" v-loading="isLoading">
-    <el-card
-      v-for="(affiliation, i) of affiliationsBasicInfo"
-      :key="i"
-      class="result-card"
-    >
-      <template #header>
-        <router-link :to="`/affiliations/${affiliation.id}`">
-          <strong>{{ affiliation.name }}</strong>
-        </router-link>
-      </template>
-      <p>
-        <strong>Description:</strong>
-        {{
-          affiliation.description
-            ? getLimitedLengthDescription(affiliation.description)
-            : "暂无简介"
-        }}
-      </p>
-      <el-button
-        type="primary"
-        class="result-button"
-        @click="$router.push(`/affiliations/${affiliation.id}`)"
+    <template v-if="affiliationsBasicInfo.length > 0">
+      <el-card
+        v-for="(affiliation, i) of affiliationsBasicInfo"
+        :key="i"
+        class="result-card"
       >
-        详情 <i class="el-icon-right" />
-      </el-button>
-    </el-card>
+        <template #header>
+          <router-link :to="`/affiliations/${affiliation.id}`">
+            <strong>{{ affiliation.name }}</strong>
+          </router-link>
+        </template>
+        <p>
+          <strong>Description:</strong>
+          {{
+            affiliation.description
+              ? getLimitedLengthDescription(affiliation.description)
+              : "暂无简介"
+          }}
+        </p>
+        <el-button
+          type="primary"
+          class="result-button"
+          @click="$router.push(`/affiliations/${affiliation.id}`)"
+        >
+          详情 <i class="el-icon-right" />
+        </el-button>
+      </el-card>
+    </template>
+    <p v-else style="text-align: center; line-height: 70vh">暂无结果……</p>
   </div>
 </template>
 
@@ -33,6 +36,7 @@
 import Vue from "vue";
 import { Card } from "element-ui";
 import { AffiliationBasic } from "@/interfaces/affiliations";
+import AffiliationAPI from "@/api/affiliations";
 
 export default Vue.extend({
   name: "SearchResultAffiliations",
@@ -62,50 +66,33 @@ export default Vue.extend({
   },
   methods: {
     // 获取搜索结果
-    fetchSearchResult(keyword: string, page = 1) {
+    async fetchSearchResult(keyword: string, page = 1) {
       console.log("fetching", "affiliations", keyword, page);
       this.isLoading = true;
-      setTimeout(() => {
-        this.affiliationsBasicInfo = [
-          {
-            id: "9bd189405e91f3902f48a91fe1b83d1c",
-            name:
-              "Guangdong Key Laboratory for Big Data Analysis and Simulation of Public Opinion",
-            description: null
-          },
-          {
-            id: "9bd189405e91f3902f48a91fe1b83d1c",
-            name:
-              "Guangdong Key Laboratory for Big Data Analysis and Simulation of Public Opinion",
-            description: null
-          },
-          {
-            id: "9bd189405e91f3902f48a91fe1b83d1c",
-            name:
-              "Guangdong Key Laboratory for Big Data Analysis and Simulation of Public Opinion",
-            description: null
-          },
-          {
-            id: "9bd189405e91f3902f48a91fe1b83d1c",
-            name:
-              "Guangdong Key Laboratory for Big Data Analysis and Simulation of Public Opinion",
-            description: null
-          },
-          {
-            id: "9bd189405e91f3902f48a91fe1b83d1c",
-            name:
-              "Guangdong Key Laboratory for Big Data Analysis and Simulation of Public Opinion",
-            description: null
-          }
-        ];
-        // 为了在 JSX 中解析，此处事件名称必须为 camelCase
-        // 并且我不想引入一个新的库
-        this.$emit("totalChange", 50);
-        this.isLoading = false;
-      }, 500);
+      const affiliationSearchRes = await AffiliationAPI.search(keyword, page);
+      const affiliationIds = affiliationSearchRes.data.ids;
+      // 每一页数量必然在 0 - 10（约定）
+      const affiliationsBasicInfoReqs = affiliationIds.map(id =>
+        AffiliationAPI.getBasicInfoById(id)
+      );
+      // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+      const reqBatch1 = Promise.all(affiliationsBasicInfoReqs.slice(0, 4));
+      const reqBatch2 = Promise.all(affiliationsBasicInfoReqs.slice(4, 7));
+      const reqBatch3 = Promise.all(affiliationsBasicInfoReqs.slice(7, 10));
+      const res1 = await reqBatch1;
+      const res2 = await reqBatch2;
+      const res3 = await reqBatch3;
+      this.affiliationsBasicInfo = [
+        ...res1.map(res => res.data),
+        ...res2.map(res => res.data),
+        ...res3.map(res => res.data)
+      ];
+      // 为了在 JSX 中解析，此处事件名称必须为 camelCase
+      // 并且我不想引入一个新的库
+      this.$emit("totalChange", affiliationSearchRes.data.count);
+      this.isLoading = false;
     },
     getLimitedLengthDescription(desc: string) {
-      console.log(desc);
       // 截取前500个字符，相当于前100词左右
       // 据某统计数据表示，平均单词长度为4-5个字母
       const LIMIT = 500;

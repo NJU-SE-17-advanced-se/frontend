@@ -15,27 +15,34 @@
         value-format="yyyy"
       />
     </div>
-    <el-card v-for="(paper, i) of papersBasicInfo" :key="i" class="result-card">
-      <template #header>
-        <router-link :to="`/papers/${paper.id}`">
-          <strong>{{ paper.title }}</strong>
-        </router-link>
-      </template>
-      <p>
-        <strong>Publication:</strong>
-        {{ paper.publication }}, {{ paper.publicationDate }}
-      </p>
-      <p><strong>Authors:</strong> {{ paper.researchers }}</p>
-      <p><strong>Abstract:</strong> {{ getLimitedLengthAbs(paper.abs) }}</p>
-      <p><strong>Citation:</strong> {{ paper.citations }}</p>
-      <el-button
-        type="primary"
-        class="result-button"
-        @click="$router.push(`/papers/${paper.id}`)"
+    <template v-if="papersBasicInfo.length > 0">
+      <el-card
+        v-for="(paper, i) of papersBasicInfo"
+        :key="i"
+        class="result-card"
       >
-        详情 <i class="el-icon-right" />
-      </el-button>
-    </el-card>
+        <template #header>
+          <router-link :to="`/papers/${paper.id}`">
+            <strong>{{ paper.title }}</strong>
+          </router-link>
+        </template>
+        <p>
+          <strong>Publication:</strong>
+          {{ paper.publication }}, {{ paper.publicationDate }}
+        </p>
+        <p><strong>Authors:</strong> {{ paper.researchers }}</p>
+        <p><strong>Abstract:</strong> {{ getLimitedLengthAbs(paper.abs) }}</p>
+        <p><strong>Citation:</strong> {{ paper.citations }}</p>
+        <el-button
+          type="primary"
+          class="result-button"
+          @click="$router.push(`/papers/${paper.id}`)"
+        >
+          详情 <i class="el-icon-right" />
+        </el-button>
+      </el-card>
+    </template>
+    <p v-else style="text-align: center; line-height: 70vh">暂无结果……</p>
   </div>
 </template>
 
@@ -43,6 +50,8 @@
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
 import { PaperBasic } from "@/interfaces/papers";
+import { errorMsg } from "@/utils/message";
+import PaperAPI from "@/api/papers";
 
 export default Vue.extend({
   name: "SearchResultPapers",
@@ -107,84 +116,43 @@ export default Vue.extend({
   },
   methods: {
     // 获取搜索结果
-    fetchSearchResult(
+    async fetchSearchResult(
       keyword: string,
       page: number,
       start?: string,
       end?: string
     ) {
       if (!start) {
-        this.$message.error("请选择开始年份");
+        errorMsg("请选择开始年份");
       } else if (!end) {
-        this.$message.error("请选择结束年份");
+        errorMsg("请选择结束年份");
       } else if (new Date(start) > new Date(end)) {
-        this.$message.error("开始年份不能在结束年份之后");
+        errorMsg("开始年份不能在结束年份之后");
       } else {
         console.log("fetching", "papers", keyword, page, start, end);
         this.isLoading = true;
-        setTimeout(() => {
-          this.papersBasicInfo = [
-            {
-              id: "6880395",
-              title:
-                "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
-              abs:
-                "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
-              publication: "32_7004098",
-              publicationDate: "2015",
-              citations: 33,
-              researchers: ["37315742600", "37417468700"]
-            },
-            {
-              id: "6880395",
-              title:
-                "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
-              abs:
-                "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
-              publication: "32_7004098",
-              publicationDate: "2015",
-              citations: 33,
-              researchers: ["37315742600", "37417468700"]
-            },
-            {
-              id: "6880395",
-              title:
-                "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
-              abs:
-                "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
-              publication: "32_7004098",
-              publicationDate: "2015",
-              citations: 33,
-              researchers: ["37315742600", "37417468700"]
-            },
-            {
-              id: "6880395",
-              title:
-                "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
-              abs:
-                "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
-              publication: "32_7004098",
-              publicationDate: "2015",
-              citations: 33,
-              researchers: ["37315742600", "37417468700"]
-            },
-            {
-              id: "6880395",
-              title:
-                "Who Will Stay in the FLOSS Community? Modeling Participant’s Initial Behavior",
-              abs:
-                "Motivation: To survive and succeed, FLOSS projects need contributors able to accomplish critical project tasks. However, such tasks require extensive project experience of long term contributors (LTCs). Aim: We measure, understand, and predict how the newcomers' involvement and environment in the issue tracking system (ITS) affect their odds of becoming an LTC. Method: ITS data of Mozilla and Gnome, literature, interviews, and online documents were used to design measures of involvement and environment. A logistic regression model was used to explain and predict contributor's odds of becoming an LTC. We also reproduced the results on new data provided by Mozilla. Results: We constructed nine measures of involvement and environment based on events recorded in an ITS. Macro-climate is the overall project environment while micro-climate is person-specific and varies among the participants. Newcomers who are able to get at least one issue reported in the first month to be fixed, doubled their odds of becoming an LTC. The macro-climate with high project popularity and the micro-climate with low attention from peers reduced the odds. The precision of LTC prediction was 38 times higher than for a random predictor. We were able to reproduce the results with new Mozilla data without losing the significance or predictive power of the previously published model. We encountered unexpected changes in some attributes and suggest ways to make analysis of ITS data more reproducible. Conclusions: The findings suggest the importance of initial behaviors and experiences of new participants and outline empirically-based approaches to help the communities with the recruitment of contributors for long-term participation and to help the participants contribute more effectively. To facilitate the reproduction of the study and of the proposed measures in other contexts, we provide the data we retrieved and the scripts we wrote at https://www.passion-lab.org/projects/developerfluency.html.",
-              publication: "32_7004098",
-              publicationDate: "2015",
-              citations: 33,
-              researchers: ["37315742600", "37417468700"]
-            }
-          ];
-          // 为了在 JSX 中解析，此处事件名称必须为 camelCase
-          // 并且我不想引入一个新的库
-          this.$emit("totalChange", 50);
-          this.isLoading = false;
-        }, 500);
+        const paperSearchRes = await PaperAPI.search(keyword, page, start, end);
+        const paperIds = paperSearchRes.data.ids;
+        // 每一页数量必然在 0 - 10（约定）
+        const papersBasicInfoReqs = paperIds.map(id =>
+          PaperAPI.getBasicInfoById(id)
+        );
+        // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+        const reqBatch1 = Promise.all(papersBasicInfoReqs.slice(0, 4));
+        const reqBatch2 = Promise.all(papersBasicInfoReqs.slice(4, 7));
+        const reqBatch3 = Promise.all(papersBasicInfoReqs.slice(7, 10));
+        const res1 = await reqBatch1;
+        const res2 = await reqBatch2;
+        const res3 = await reqBatch3;
+        this.papersBasicInfo = [
+          ...res1.map(res => res.data),
+          ...res2.map(res => res.data),
+          ...res3.map(res => res.data)
+        ];
+        // 为了在 JSX 中解析，此处事件名称必须为 camelCase
+        // 并且我不想引入一个新的库
+        this.$emit("totalChange", paperSearchRes.data.count);
+        this.isLoading = false;
       }
     },
     getLimitedLengthAbs(abs: string) {
