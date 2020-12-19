@@ -23,6 +23,7 @@
           {{ paperId }}
         </li>
       </ul>
+      <p v-if="paperIds.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>

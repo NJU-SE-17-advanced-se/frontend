@@ -23,6 +23,7 @@
           {{ domainId }}
         </li>
       </ul>
+      <p v-if="domainIds.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>

@@ -23,6 +23,7 @@
           {{ id }}
         </li>
       </ul>
+      <p v-if="partnershipIds.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>

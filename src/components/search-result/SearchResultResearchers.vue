@@ -16,7 +16,7 @@
           <strong>Affiliations:</strong>
           <span v-if="researcher.affiliation.length === 0"> 暂无数据</span>
         </p>
-        <ul v-if="researcher.affiliation.length > 0">
+        <ul>
           <li
             v-for="(affiliation, i) of researcher.affiliation"
             :key="researcher.id + 'a' + i"
@@ -29,7 +29,7 @@
           <strong>Papers:</strong>
           <span v-if="researcher.papers.length === 0"> 暂无数据</span>
         </p>
-        <ul v-if="researcher.papers.length > 0">
+        <ul>
           <li
             v-for="(paper, i) of researcher.papers"
             :key="researcher.id + 'p' + i"
@@ -42,7 +42,7 @@
           <strong>Domains:</strong>
           <span v-if="researcher.domains.length === 0"> 暂无数据</span>
         </p>
-        <ul v-if="researcher.domains.length > 0">
+        <ul>
           <li
             v-for="(domain, i) of researcher.domains"
             :key="domain.id + 'd' + i"

@@ -15,21 +15,43 @@
             </template>
             <p><strong>OASIS-impact:</strong> {{ researcherImpact }}</p>
             <!--全部机构-->
-            <p><strong>Affiliations:</strong></p>
-            <ul
-              v-for="(affiliation, i) of researcherInfo.affiliation"
-              :key="'a' + i"
-            >
-              <li>{{ affiliation }}</li>
+            <p>
+              <strong>Affiliations:</strong>
+              <span v-if="researcherInfo.affiliation.length === 0">
+                暂无数据
+              </span>
+            </p>
+            <ul>
+              <li
+                v-for="(affiliation, i) of researcherInfo.affiliation"
+                :key="'a' + i"
+              >
+                {{ affiliation }}
+              </li>
             </ul>
             <!--代表作-->
-            <p><strong>5 Selected Papers:</strong></p>
-            <ul v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
-              <li>{{ paper }}</li>
+            <p>
+              <strong>5 Selected Papers:</strong>
+              <span v-if="researcherInfo.papers.length === 0">
+                暂无数据
+              </span>
+            </p>
+            <ul>
+              <li v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
+                {{ paper }}
+              </li>
             </ul>
-            <p><strong>Domains:</strong></p>
-            <ul v-for="(domain, i) of researcherInfo.domains" :key="'d' + i">
-              <li>{{ domain }}</li>
+            <!--领域-->
+            <p>
+              <strong>Domains:</strong>
+              <span v-if="researcherInfo.domains.length === 0">
+                暂无数据
+              </span>
+            </p>
+            <ul>
+              <li v-for="(domain, i) of researcherInfo.domains" :key="'d' + i">
+                {{ domain }}
+              </li>
             </ul>
           </el-card>
         </el-tab-pane>

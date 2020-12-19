@@ -35,7 +35,7 @@
           <strong>Authors:</strong>
           <span v-if="paper.researchers.length === 0"> 暂无数据</span>
         </p>
-        <ul v-if="paper.researchers.length > 0">
+        <ul>
           <li
             v-for="(researcher, i) of paper.researchers"
             :key="paper.id + 'r' + i"

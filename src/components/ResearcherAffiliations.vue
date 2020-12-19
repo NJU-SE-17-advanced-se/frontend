@@ -23,6 +23,7 @@
           {{ affiliationId }}
         </li>
       </ul>
+      <p v-if="affiliationIds.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>

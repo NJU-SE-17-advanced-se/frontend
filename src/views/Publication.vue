@@ -15,9 +15,15 @@
           <strong>Publication:</strong> {{ publicationInfo.publicationDate }}
         </p>
         <p><strong>OASIS-impact:</strong> {{ publicationInfo.impact }}</p>
-        <p><strong>Papers:</strong></p>
-        <ul v-for="(paper, i) of publicationInfo.papers" :key="i">
-          <li>{{ paper }}</li>
+        <!--论文-->
+        <p>
+          <strong>Papers:</strong>
+          <span v-if="publicationInfo.papers.length === 0">暂无数据</span>
+        </p>
+        <ul>
+          <li v-for="(paper, i) of publicationInfo.papers" :key="i">
+            {{ paper }}
+          </li>
         </ul>
       </el-card>
     </el-main>

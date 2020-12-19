@@ -11,13 +11,29 @@
         <template #header>
           <h2>{{ domainInfo.name }}</h2>
         </template>
-        <p><strong>Researchers:</strong></p>
-        <ul v-for="(researcher, i) of domainInfo.researchers" :key="'r' + i">
-          <li>{{ researcher }}</li>
+        <!--学者-->
+        <p>
+          <strong>Researchers:</strong>
+          <span v-if="domainInfo.researchers.length === 0">
+            暂无数据
+          </span>
+        </p>
+        <ul>
+          <li v-for="(researcher, i) of domainInfo.researchers" :key="'r' + i">
+            {{ researcher }}
+          </li>
         </ul>
-        <p><strong>Papers:</strong></p>
-        <ul v-for="(paper, i) of domainInfo.papers" :key="'p' + i">
-          <li>{{ paper }}</li>
+        <!--论文-->
+        <p>
+          <strong>Papers:</strong>
+          <span v-if="domainInfo.papers.length === 0">
+            暂无数据
+          </span>
+        </p>
+        <ul>
+          <li v-for="(paper, i) of domainInfo.papers" :key="'p' + i">
+            {{ paper }}
+          </li>
         </ul>
       </el-card>
     </el-main>

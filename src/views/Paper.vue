@@ -17,7 +17,19 @@
               <strong>Publication:</strong>
               {{ paperInfo.publication }}, {{ paperInfo.publicationDate }}
             </p>
-            <p><strong>Authors:</strong> {{ paperInfo.researchers }}</p>
+            <!--学者-->
+            <p>
+              <strong>Authors:</strong>
+              <span v-if="paperInfo.researchers.length === 0"> 暂无数据</span>
+            </p>
+            <ul>
+              <li
+                v-for="(researcher, i) of paperInfo.researchers"
+                :key="researcher.id + 'r' + i"
+              >
+                {{ researcher }}
+              </li>
+            </ul>
             <p><strong>Abstract:</strong> {{ paperInfo.abs }}</p>
             <p>
               <strong>Link:</strong>

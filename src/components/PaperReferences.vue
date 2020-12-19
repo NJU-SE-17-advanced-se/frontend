@@ -14,12 +14,12 @@
     <p v-else>暂无引用文献</p>
 
     <h4>引用学者</h4>
-    <ul v-if="citedResearcherIds.length > 0">
+    <ul>
       <li v-for="(researchId, i) of citedResearcherIds" :key="'r' + i">
         {{ researchId }}
       </li>
     </ul>
-    <p v-else>暂无引用学者</p>
+    <p v-if="citedResearcherIds.length === 0">暂无引用学者</p>
   </el-card>
 </template>
 
