@@ -11,6 +11,13 @@
         <template #header>
           <h2>{{ affiliationInfo.name }}</h2>
         </template>
+        <!--描述-->
+        <p>
+          <strong>Description:</strong>
+          <span v-if="!affiliationInfo.description">
+            暂无数据
+          </span>
+        </p>
         <!--学者-->
         <p>
           <strong>Researchers:</strong>
@@ -23,7 +30,9 @@
             v-for="(researcher, i) of affiliationInfo.researchers"
             :key="'r' + i"
           >
-            {{ researcher }}
+            <router-link :to="`/researchers/${researcher.id}`">
+              {{ researcher.name }}
+            </router-link>
           </li>
         </ul>
         <!--论文-->
@@ -35,7 +44,9 @@
         </p>
         <ul>
           <li v-for="(paper, i) of affiliationInfo.papers" :key="'p' + i">
-            {{ paper }}
+            <router-link :to="`/papers/${paper.id}`">
+              {{ paper.title }}
+            </router-link>
           </li>
         </ul>
         <!--领域-->
@@ -47,7 +58,9 @@
         </p>
         <ul>
           <li v-for="(domain, i) of affiliationInfo.domains" :key="'d' + i">
-            {{ domain }}
+            <router-link :to="`/domains/${domain.id}`">
+              {{ domain.name }}
+            </router-link>
           </li>
         </ul>
       </el-card>
@@ -58,7 +71,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, Header, Main } from "element-ui";
-import { Affiliation } from "@/interfaces/affiliations";
+import { AffiliationDisplay } from "@/interfaces/affiliations";
+import AffiliationAPI from "@/api/affiliations";
+import DomainsAPI from "@/api/domains";
+import PapersAPI from "@/api/papers";
+import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "Affiliation",
@@ -75,37 +92,59 @@ export default Vue.extend({
       isLoading: false,
       affiliationInfo: {
         id: "",
-        name: "",
-        description: "",
+        name: "未知机构",
+        description: "暂无描述",
         researchers: [],
         papers: [],
         domains: []
-      } as Affiliation
+      } as AffiliationDisplay
     };
   },
   mounted() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.affiliationInfo = {
-        id: "079423ca126a82dd12f9541e46640761",
-        name:
-          "Department of Computer and Data Sciences, Case Western Reserve University",
-        description: null,
-        researchers: ["37087230307", "37087235629"],
-        papers: ["8952375", "8952375"],
-        domains: [
-          "8b4427c2cdf345e6b75ef55fbbebf05a",
-          "ae506cdc364fa9ba0b8184d8e2245d2c",
-          "cadafa0929f7e3c0c9cf2ad6eb45710e",
-          "f2f30c2b550fc0012e3aa71c52a0f004",
-          "8b4427c2cdf345e6b75ef55fbbebf05a",
-          "ae506cdc364fa9ba0b8184d8e2245d2c",
-          "cadafa0929f7e3c0c9cf2ad6eb45710e",
-          "f2f30c2b550fc0012e3aa71c52a0f004"
-        ]
-      };
-      this.isLoading = false;
-    }, 500);
+    this.fetchAffiliation(this.id);
+  },
+  methods: {
+    async fetchAffiliation(id: string) {
+      this.isLoading = true;
+      try {
+        const affiliationInfo = (await AffiliationAPI.getInfoById(id)).data;
+        this.affiliationInfo.id = affiliationInfo.id;
+        this.affiliationInfo.name = affiliationInfo.name;
+        this.affiliationInfo.description = affiliationInfo.description;
+        // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
+        // 从上到下分批加载
+        // 学者
+        const researchersBasicInfoReqs = affiliationInfo.researchers.map(id =>
+          ResearcherAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const researchersRes = await Promise.all(researchersBasicInfoReqs);
+          this.affiliationInfo.researchers = researchersRes.map(
+            res => res.data
+          );
+        }, 0);
+        // 论文
+        const papersBasicInfoReqs = affiliationInfo.papers.map(id =>
+          PapersAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const papersRes = await Promise.all(papersBasicInfoReqs);
+          this.affiliationInfo.papers = papersRes.map(res => res.data);
+        }, 0);
+        // 领域
+        const domainsBasicInfoReqs = affiliationInfo.domains.map(id =>
+          DomainsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const domainsRes = await Promise.all(domainsBasicInfoReqs);
+          this.affiliationInfo.domains = domainsRes.map(res => res.data);
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 });
 </script>
