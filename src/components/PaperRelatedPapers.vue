@@ -1,17 +1,16 @@
 <template>
-  <!--TODO: 可以考虑换成关系图-->
   <el-card class="result-card" v-loading="isLoading">
     <template #header>
-      <h3>引用文献</h3>
+      <h3>相关论文</h3>
     </template>
-    <ol v-if="references.length > 0">
-      <li v-for="(paper, i) of referencesInfo" :key="'p' + i">
+    <ol v-if="relatedPapers.length > 0">
+      <li v-for="(paper, i) of relatedPapers" :key="'p' + i">
         <router-link :to="`/papers/${paper.id}`">
           {{ paper.title }}
         </router-link>
       </li>
     </ol>
-    <p v-else>暂无引用文献</p>
+    <p v-else>暂无相关论文</p>
   </el-card>
 </template>
 
@@ -22,10 +21,9 @@ import { PaperBasic } from "@/interfaces/papers";
 import PapersAPI from "@/api/papers";
 
 export default Vue.extend({
-  name: "PaperReferences",
+  name: "PaperRelatedPapers",
   props: {
-    id: String, // 此属性冗余
-    references: Array // types: string[]
+    id: String
   },
   components: {
     [Card.name]: Card
@@ -33,7 +31,7 @@ export default Vue.extend({
   data() {
     return {
       isLoading: false,
-      referencesInfo: [] as PaperBasic[]
+      relatedPapers: [] as PaperBasic[]
     };
   },
   // 处理路由变化时的行为
@@ -43,19 +41,19 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.fetchReferences();
+    this.fetchRelatedPapers();
   },
   methods: {
-    async fetchReferences() {
+    async fetchRelatedPapers() {
       this.isLoading = true;
       try {
-        // 因为数据量不是很大，所以不会成为非常严重的性能问题
-        const referencesBasicInfoReqs = this.references.map(id =>
+        const citedPaperIds = (await PapersAPI.getCitedPapers(this.id)).data;
+        const citedPapersBasicInfoReqs = citedPaperIds.map(id =>
           PapersAPI.getBasicInfoById(id)
         );
         setTimeout(async () => {
-          const papersRes = await Promise.all(referencesBasicInfoReqs);
-          this.referencesInfo = papersRes.map(res => res.data);
+          const papersRes = await Promise.all(citedPapersBasicInfoReqs);
+          this.relatedPapers = papersRes.map(res => res.data);
         }, 0);
       } catch (e) {
         console.log(e.toString());
@@ -67,18 +65,4 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped lang="less">
-.wrapper {
-  min-height: 60vh;
-
-  .result-card {
-    min-height: 60vh;
-    margin-bottom: 20px;
-
-    .result-button {
-      float: right;
-      margin-bottom: 20px;
-    }
-  }
-}
-</style>
+<style scoped></style>
