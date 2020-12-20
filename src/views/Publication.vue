@@ -18,13 +18,15 @@
         <!--论文-->
         <p>
           <strong>Papers:</strong>
-          <span v-if="publicationInfo.papers.length === 0">暂无数据</span>
+          <span v-if="publicationInfo.papers.length === 0"> 暂无数据</span>
         </p>
-        <ul>
+        <ol>
           <li v-for="(paper, i) of publicationInfo.papers" :key="i">
-            {{ paper }}
+            <router-link :to="`/papers/${paper.id}`">
+              {{ paper.title }}
+            </router-link>
           </li>
-        </ul>
+        </ol>
       </el-card>
     </el-main>
   </div>
@@ -32,8 +34,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Publication } from "@/interfaces/publications";
+import { PublicationDisplay } from "@/interfaces/publications";
 import { Card, Header, Main } from "element-ui";
+import PapersAPI from "@/api/papers";
+import PublicationsAPI from "@/api/publications";
 
 export default Vue.extend({
   name: "Publication",
@@ -54,28 +58,36 @@ export default Vue.extend({
         publicationDate: "",
         impact: 0,
         papers: []
-      } as Publication
+      } as PublicationDisplay
     };
   },
   mounted() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.publicationInfo = {
-        id: "32_7058460",
-        name: "IEEE Transactions on Software Engineering",
-        publicationDate: "2015",
-        impact: -1,
-        papers: [
-          "6915751",
-          "6926798",
-          "6926828",
-          "6926851",
-          "6930767",
-          "6936339"
-        ]
-      };
-      this.isLoading = false;
-    }, 500);
+    this.fetchPublication(this.id);
+  },
+  methods: {
+    async fetchPublication(id: string) {
+      this.isLoading = true;
+      try {
+        const publicationInfo = (await PublicationsAPI.getInfoById(id)).data;
+        this.publicationInfo.id = publicationInfo.id;
+        this.publicationInfo.name = publicationInfo.name;
+        this.publicationInfo.publicationDate = publicationInfo.publicationDate;
+        this.publicationInfo.impact = publicationInfo.impact;
+        // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
+        // 论文
+        const papersBasicInfoReqs = publicationInfo.papers.map(id =>
+          PapersAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const papersRes = await Promise.all(papersBasicInfoReqs);
+          this.publicationInfo.papers = papersRes.map(res => res.data);
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 });
 </script>
