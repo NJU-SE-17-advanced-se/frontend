@@ -20,7 +20,9 @@
         </p>
         <ul>
           <li v-for="(researcher, i) of domainInfo.researchers" :key="'r' + i">
-            {{ researcher }}
+            <router-link :to="`/researchers/${researcher.id}`">
+              {{ researcher.name }}
+            </router-link>
           </li>
         </ul>
         <!--论文-->
@@ -32,7 +34,9 @@
         </p>
         <ul>
           <li v-for="(paper, i) of domainInfo.papers" :key="'p' + i">
-            {{ paper }}
+            <router-link :to="`/papers/${paper.id}`">
+              {{ paper.title }}
+            </router-link>
           </li>
         </ul>
       </el-card>
@@ -43,7 +47,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, Header, Main } from "element-ui";
-import { Domain } from "@/interfaces/domains";
+import { DomainDisplay } from "@/interfaces/domains";
+import DomainsAPI from "@/api/domains";
+import ResearcherAPI from "@/api/researchers";
+import PapersAPI from "@/api/papers";
 
 export default Vue.extend({
   name: "Domain",
@@ -60,28 +67,46 @@ export default Vue.extend({
       isLoading: false,
       domainInfo: {
         id: "",
-        name: "",
+        name: "未知领域",
         researchers: [],
         papers: []
-      } as Domain
+      } as DomainDisplay
     };
   },
   mounted() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.domainInfo = {
-        id: "0f852eed0007725004e18675b87bef9d",
-        name: "DATALOG",
-        researchers: [
-          "37086226284",
-          "37086760852",
-          "37702000200",
-          "38125014600"
-        ],
-        papers: ["9000032"]
-      };
-      this.isLoading = false;
-    }, 500);
+    this.fetchDomain(this.id);
+  },
+  methods: {
+    async fetchDomain(id: string) {
+      this.isLoading = true;
+      try {
+        const domainInfo = (await DomainsAPI.getInfoById(id)).data;
+        this.domainInfo.id = domainInfo.id;
+        this.domainInfo.name = domainInfo.name;
+        // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
+        // 从上到下分批加载
+        // 学者
+        const researchersBasicInfoReqs = domainInfo.researchers.map(id =>
+          ResearcherAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const researchersRes = await Promise.all(researchersBasicInfoReqs);
+          this.domainInfo.researchers = researchersRes.map(res => res.data);
+        }, 0);
+        // 论文
+        const papersBasicInfoReqs = domainInfo.papers.map(id =>
+          PapersAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const papersRes = await Promise.all(papersBasicInfoReqs);
+          this.domainInfo.papers = papersRes.map(res => res.data);
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 });
 </script>
