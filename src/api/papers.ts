@@ -1,15 +1,8 @@
 import axios from "@/config/axios";
 import { NewPaper, Paper, PaperBasic } from "@/interfaces/papers";
 import { ApiResponse } from "@/interfaces/common";
-import { errorMsg } from "@/utils/message";
 import { apiWrapper } from "@/utils/wrapper";
-
-// handlers
-const gatewayTimeoutHandler = (status: number) => {
-  if (status === 504) {
-    errorMsg("请求超时，请刷新重试");
-  }
-};
+import PaperHandlers from "@/api/handlers/papers";
 
 // 搜索论文
 interface PaperSearchRes {
@@ -92,18 +85,12 @@ async function getImpact(id: string): Promise<ApiResponse<string[]>> {
 // TODO: 引用关系
 
 export default {
-  search: apiWrapper(search, gatewayTimeoutHandler),
-  getInfoById: apiWrapper(getInfoById, gatewayTimeoutHandler),
-  getBasicInfoById: apiWrapper(getBasicInfoById, gatewayTimeoutHandler),
-  getReferences: apiWrapper(getReferences, gatewayTimeoutHandler),
-  getDomains: apiWrapper(getDomains, gatewayTimeoutHandler),
-  getRecommendReviewers: apiWrapper(
-    getRecommendReviewers,
-    gatewayTimeoutHandler
-  ),
-  getNotRecommendReviewers: apiWrapper(
-    getNotRecommendReviewers,
-    gatewayTimeoutHandler
-  ),
-  getImpact: apiWrapper(getImpact, gatewayTimeoutHandler)
+  search,
+  getInfoById: apiWrapper(getInfoById, PaperHandlers.notFoundHandler),
+  getBasicInfoById: apiWrapper(getBasicInfoById, PaperHandlers.notFoundHandler),
+  getReferences,
+  getDomains,
+  getRecommendReviewers: apiWrapper(getRecommendReviewers),
+  getNotRecommendReviewers: apiWrapper(getNotRecommendReviewers),
+  getImpact
 };

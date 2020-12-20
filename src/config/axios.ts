@@ -1,13 +1,14 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { errorMsg } from "@/utils/message";
 
-const allowStatusCodes = [404, 504];
+const allowStatusCodes = [404];
 
 const globalConfig: AxiosRequestConfig = {
   baseURL:
     process.env.NODE_ENV === "production"
       ? "https://wensun.top/api"
       : "http://localhost:8393/api",
-  timeout: 10 * 1000, // 总请求时间不超过 10s
+  timeout: 15 * 1000, // 总请求时间不超过 15s
   validateStatus(status) {
     return (status >= 200 && status < 300) || allowStatusCodes.includes(status);
   }
@@ -33,6 +34,13 @@ globalAxios.interceptors.response.use(
     return config;
   },
   error => {
+    if (error.response.status === 502) {
+      errorMsg("服务暂时不可用，请刷新重试");
+    }
+    if (error.response.status === 504) {
+      errorMsg("服务请求超时，请刷新重试");
+    }
+    console.log(error);
     return Promise.resolve(error);
   }
 );

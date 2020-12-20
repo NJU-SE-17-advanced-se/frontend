@@ -1,15 +1,8 @@
 import axios from "@/config/axios";
 import { Researcher, ResearcherBasic } from "@/interfaces/researchers";
 import { ApiResponse } from "@/interfaces/common";
-import { errorMsg } from "@/utils/message";
 import { apiWrapper } from "@/utils/wrapper";
-
-// handlers
-const gatewayTimeoutHandler = (status: number) => {
-  if (status === 504) {
-    errorMsg("请求超时，请刷新重试");
-  }
-};
+import ResearcherHandlers from "@/api/handlers/researchers";
 
 // 搜索学者
 interface ResearcherSearchRes {
@@ -132,23 +125,17 @@ async function getImpact(id: string): Promise<ApiResponse<string[]>> {
 // TODO: 引用关系
 
 export default {
-  search: apiWrapper(search, gatewayTimeoutHandler),
-  getInfoById: apiWrapper(getInfoById, gatewayTimeoutHandler),
-  getAffiliationsByTimeRange: apiWrapper(
-    getAffiliationsByTimeRange,
-    gatewayTimeoutHandler
+  search,
+  getInfoById: apiWrapper(getInfoById, ResearcherHandlers.notFoundHandler),
+  getAffiliationsByTimeRange,
+  getBasicInfoById: apiWrapper(
+    getBasicInfoById,
+    ResearcherHandlers.notFoundHandler
   ),
-  getBasicInfoById: apiWrapper(getBasicInfoById, gatewayTimeoutHandler),
-  getDomainsByTimeRange: apiWrapper(
-    getDomainsByTimeRange,
-    gatewayTimeoutHandler
-  ),
-  getPapersByTimeRange: apiWrapper(getPapersByTimeRange, gatewayTimeoutHandler),
-  getPartnersByTimeRange: apiWrapper(
-    getPartnersByTimeRange,
-    gatewayTimeoutHandler
-  ),
-  predictPartners: apiWrapper(predictPartners, gatewayTimeoutHandler),
-  predictDomains: apiWrapper(predictDomains, gatewayTimeoutHandler),
-  getImpact: apiWrapper(getImpact, gatewayTimeoutHandler)
+  getDomainsByTimeRange,
+  getPapersByTimeRange,
+  getPartnersByTimeRange,
+  predictPartners,
+  predictDomains,
+  getImpact
 };

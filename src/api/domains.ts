@@ -1,15 +1,8 @@
 import axios from "@/config/axios";
 import { Domain, DomainBasic } from "@/interfaces/domains";
 import { ApiResponse } from "@/interfaces/common";
-import { errorMsg } from "@/utils/message";
 import { apiWrapper } from "@/utils/wrapper";
-
-// handlers
-const gatewayTimeoutHandler = (status: number) => {
-  if (status === 504) {
-    errorMsg("请求超时，请刷新重试");
-  }
-};
+import DomainHandlers from "@/api/handlers/domains";
 
 // 搜索领域
 interface DomainSearchRes {
@@ -58,9 +51,12 @@ async function getResearchers(id: string): Promise<ApiResponse<string[]>> {
 }
 
 export default {
-  search: apiWrapper(search, gatewayTimeoutHandler),
-  getInfoById: apiWrapper(getInfoById, gatewayTimeoutHandler),
-  getBasicInfoById: apiWrapper(getBasicInfoById, gatewayTimeoutHandler),
-  getPapers: apiWrapper(getPapers, gatewayTimeoutHandler),
-  getResearchers: apiWrapper(getResearchers, gatewayTimeoutHandler)
+  search,
+  getInfoById: apiWrapper(getInfoById, DomainHandlers.notFoundHandler),
+  getBasicInfoById: apiWrapper(
+    getBasicInfoById,
+    DomainHandlers.notFoundHandler
+  ),
+  getPapers,
+  getResearchers
 };

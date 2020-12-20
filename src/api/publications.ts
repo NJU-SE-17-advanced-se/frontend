@@ -1,15 +1,8 @@
 import axios from "@/config/axios";
 import { Publication, PublicationBasic } from "@/interfaces/publications";
 import { ApiResponse } from "@/interfaces/common";
-import { errorMsg } from "@/utils/message";
 import { apiWrapper } from "@/utils/wrapper";
-
-// handlers
-const gatewayTimeoutHandler = (status: number) => {
-  if (status === 504) {
-    errorMsg("请求超时，请刷新重试");
-  }
-};
+import PublicationHandlers from "@/api/handlers/publications";
 
 // 搜索出版物
 interface PublicationSearchRes {
@@ -63,8 +56,11 @@ async function getPapers(
 }
 
 export default {
-  search: apiWrapper(search, gatewayTimeoutHandler),
-  getInfoById: apiWrapper(getInfoById, gatewayTimeoutHandler),
-  getBasicInfoById: apiWrapper(getBasicInfoById, gatewayTimeoutHandler),
-  getPapers: apiWrapper(getPapers, gatewayTimeoutHandler)
+  search,
+  getInfoById: apiWrapper(getInfoById, PublicationHandlers.notFoundHandler),
+  getBasicInfoById: apiWrapper(
+    getBasicInfoById,
+    PublicationHandlers.notFoundHandler
+  ),
+  getPapers
 };
