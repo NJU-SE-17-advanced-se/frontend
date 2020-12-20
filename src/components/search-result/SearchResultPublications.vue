@@ -144,11 +144,9 @@ export default Vue.extend({
           const res1 = await reqBatch1;
           const res2 = await reqBatch2;
           const res3 = await reqBatch3;
-          this.publicationsBasicInfo = [
-            ...res1.map(res => res.data),
-            ...res2.map(res => res.data),
-            ...res3.map(res => res.data)
-          ];
+          this.publicationsBasicInfo = [...res1, ...res2, ...res3].map(
+            res => res.data
+          );
           // 为了在 JSX 中解析，此处事件名称必须为 camelCase
           // 并且我不想引入一个新的库
           this.$emit("totalChange", publicationSearchRes.data.count);

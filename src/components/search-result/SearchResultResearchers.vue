@@ -117,11 +117,9 @@ export default Vue.extend({
         const res1 = await reqBatch1;
         const res2 = await reqBatch2;
         const res3 = await reqBatch3;
-        const researcherBasicInfo = [
-          ...res1.map(res => res.data),
-          ...res2.map(res => res.data),
-          ...res3.map(res => res.data)
-        ];
+        const researcherBasicInfo = [...res1, ...res2, ...res3].map(
+          res => res.data
+        );
         // 出于性能考虑，只保留前 5 个领域
         this.researchersBasicInfo = researcherBasicInfo.map(info => ({
           ...info,
