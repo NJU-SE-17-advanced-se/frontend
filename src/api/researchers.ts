@@ -115,14 +115,84 @@ async function predictDomains(id: string): Promise<ApiResponse<string[]>> {
 }
 
 // 获取某学者影响力
-async function getImpact(id: string): Promise<ApiResponse<string[]>> {
+async function getImpact(id: string): Promise<ApiResponse<number>> {
   const { status, data } = await axios.get(
     `/task-impact-analysis/researchers/${id}/impact`
   );
   return { status, data };
 }
 
-// TODO: 引用关系
+// 获取某学者引用了哪些学者
+async function getCitingResearchers(
+  id: string
+): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations`,
+    {
+      params: { type: "quoting" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某学者被哪些学者引用
+async function getCitedResearchers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations`,
+    {
+      params: { type: "quoted" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某学者的论文引用了哪些论文
+async function getCitingPapers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations/papers`,
+    {
+      params: { type: "quoting" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某学者的论文被哪些论文引用
+async function getCitedPapers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations/papers`,
+    {
+      params: { type: "quoted" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某学者的论文引用了哪些学者
+async function getPapersCitingResearchers(
+  id: string
+): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations/papers/researchers`,
+    {
+      params: { type: "quoting" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某学者的论文被哪些学者引用
+async function getPapersCitedResearchers(
+  id: string
+): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/researchers/${id}/citations/papers/researchers`,
+    {
+      params: { type: "quoted" }
+    }
+  );
+  return { status, data };
+}
 
 export default {
   search,
@@ -137,5 +207,11 @@ export default {
   getPartnersByTimeRange,
   predictPartners,
   predictDomains,
-  getImpact
+  getImpact,
+  getCitingResearchers,
+  getCitedResearchers,
+  getCitingPapers,
+  getCitedPapers,
+  getPapersCitingResearchers,
+  getPapersCitedResearchers
 };

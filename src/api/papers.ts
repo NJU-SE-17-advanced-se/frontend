@@ -75,14 +75,58 @@ async function getNotRecommendReviewers(
 }
 
 // 获取某论文影响力
-async function getImpact(id: string): Promise<ApiResponse<string[]>> {
+async function getImpact(id: string): Promise<ApiResponse<number>> {
   const { status, data } = await axios.get(
     `/task-impact-analysis/papers/${id}/impact`
   );
   return { status, data };
 }
 
-// TODO: 引用关系
+// 获取某论文引用了哪些学者
+async function getCitingResearchers(
+  id: string
+): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/papers/${id}/citations/researchers`,
+    {
+      params: { type: "quoting" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某论文被哪些学者引用
+async function getCitedResearchers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/papers/${id}/citations/researchers`,
+    {
+      params: { type: "quoted" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某论文引用了哪些论文
+async function getCitingPapers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/papers/${id}/citations`,
+    {
+      params: { type: "quoting" }
+    }
+  );
+  return { status, data };
+}
+
+// 获取某论文被哪些论文引用
+async function getCitedPapers(id: string): Promise<ApiResponse<string[]>> {
+  const { status, data } = await axios.get(
+    `/task-citation-analysis/papers/${id}/citations`,
+    {
+      params: { type: "quoted" }
+    }
+  );
+  return { status, data };
+}
 
 export default {
   search,
@@ -92,5 +136,9 @@ export default {
   getDomains,
   getRecommendReviewers: apiWrapper(getRecommendReviewers),
   getNotRecommendReviewers: apiWrapper(getNotRecommendReviewers),
-  getImpact
+  getImpact,
+  getCitingResearchers,
+  getCitedResearchers,
+  getCitingPapers,
+  getCitedPapers
 };
