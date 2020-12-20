@@ -50,7 +50,7 @@ export default Vue.extend({
       try {
         // 获取引用和被引用的学者 id
         const citedResearcherIdsReq = PapersAPI.getCitedResearchers(this.id);
-        const citingResearcherIdsReq = PapersAPI.getCitingPapers(this.id);
+        const citingResearcherIdsReq = PapersAPI.getCitingResearchers(this.id);
         const citedResearcherIds = (await citedResearcherIdsReq).data;
         const citingResearcherIds = (await citingResearcherIdsReq).data;
         // 获取详情
