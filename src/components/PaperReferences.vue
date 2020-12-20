@@ -50,7 +50,7 @@ export default Vue.extend({
       this.isLoading = true;
       try {
         // 因为数据量不是很大，所以不会成为非常严重的性能问题
-        const referencesBasicInfoReqs = this.references.map(id =>
+        const referencesBasicInfoReqs = (this.references as string[]).map(id =>
           PapersAPI.getBasicInfoById(id)
         );
         setTimeout(async () => {

@@ -37,7 +37,7 @@ export default Vue.extend({
   // 处理路由变化时的行为
   watch: {
     id() {
-      this.fetchReferences();
+      this.fetchRelatedPapers();
     }
   },
   mounted() {
