@@ -21,7 +21,7 @@
       </template>
       <ul>
         <li v-for="researcher of partnershipInfo" :key="researcher.id">
-          <router-link :to="`/researches/${researcher.id}`">
+          <router-link :to="`/researchers/${researcher.id}`">
             {{ researcher.name }}
           </router-link>
         </li>
@@ -61,6 +61,11 @@ export default Vue.extend({
     },
     endDate() {
       this.fetchPartnership(this.id, this.startDate, this.endDate);
+    },
+    id() {
+      this.fetchPartnership(this.id, this.startDate, this.endDate);
+      // 回到详情页
+      this.$emit("refresh");
     }
   },
   mounted() {
@@ -78,13 +83,16 @@ export default Vue.extend({
         const partnershipRes = (
           await ResearchersAPI.getPartnersByTimeRange(id, start, end)
         ).data;
-        const partnershipBasicInfoReqs = partnershipRes.partnership.map(id =>
-          ResearchersAPI.getBasicInfoById(id)
-        );
-        setTimeout(async () => {
-          const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
-          this.partnershipInfo = partnershipRes.map(res => res.data);
-        }, 0);
+        // 如果存在 partners 再获取
+        if (partnershipRes.partners) {
+          const partnershipBasicInfoReqs = partnershipRes.partners.map(id =>
+            ResearchersAPI.getBasicInfoById(id)
+          );
+          setTimeout(async () => {
+            const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
+            this.partnershipInfo = partnershipRes.map(res => res.data);
+          }, 0);
+        }
       }
     }
   }

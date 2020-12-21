@@ -40,6 +40,8 @@ export default Vue.extend({
   watch: {
     id() {
       this.fetchReferences();
+      // 回到详情页
+      this.$emit("refresh");
     }
   },
   mounted() {

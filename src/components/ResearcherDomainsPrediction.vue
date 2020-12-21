@@ -37,6 +37,11 @@ export default Vue.extend({
       domainInfo: [] as DomainBasic[]
     };
   },
+  watch: {
+    id() {
+      this.fetchDomains(this.id);
+    }
+  },
   mounted() {
     this.fetchDomains(this.id);
   },

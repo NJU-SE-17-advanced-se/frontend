@@ -61,6 +61,9 @@ export default Vue.extend({
     },
     endDate() {
       this.fetchPapers(this.id, this.startDate, this.endDate);
+    },
+    id() {
+      this.fetchPapers(this.id, this.startDate, this.endDate);
     }
   },
   mounted() {
