@@ -5,11 +5,13 @@
         <h3>该学者未来可能的研究领域</h3>
       </template>
       <ul>
-        <li v-for="domainId of domainIds" :key="domainId">
-          {{ domainId }}
+        <li v-for="domain of domainInfo" :key="domain.id">
+          <router-link :to="`/domains/${domain.id}`">
+            {{ domain.name }}
+          </router-link>
         </li>
       </ul>
-      <p v-if="domainIds.length === 0">暂无数据</p>
+      <p v-if="domainInfo.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>
@@ -17,6 +19,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
+import { DomainBasic } from "@/interfaces/domains";
+import DomainsAPI from "@/api/domains";
+import ResearchersAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherDomainsPrediction",
@@ -29,13 +34,23 @@ export default Vue.extend({
   },
   data() {
     return {
-      domainIds: [] as string[]
+      domainInfo: [] as DomainBasic[]
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.domainIds = ["1", "2", "3", "4", "5"];
-    }, 500);
+    this.fetchDomains(this.id);
+  },
+  methods: {
+    async fetchDomains(id: string) {
+      const domainsIds = (await ResearchersAPI.predictDomains(id)).data;
+      const domainsBasicInfoReqs = domainsIds.map(id =>
+        DomainsAPI.getBasicInfoById(id)
+      );
+      setTimeout(async () => {
+        const domainsRes = await Promise.all(domainsBasicInfoReqs);
+        this.domainInfo = domainsRes.map(res => res.data);
+      }, 0);
+    }
   }
 });
 </script>
