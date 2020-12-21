@@ -85,7 +85,7 @@ async function getPapersByTimeRange(
 
 // 获取某学者某一段时间的合作者
 interface PartnershipRes {
-  partnership: string[];
+  partners: string[];
   weight: [number, number][];
 }
 

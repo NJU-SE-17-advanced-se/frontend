@@ -21,7 +21,7 @@
       </template>
       <ul>
         <li v-for="researcher of partnershipInfo" :key="researcher.id">
-          <router-link :to="`/researches/${researcher.id}`">
+          <router-link :to="`/researchers/${researcher.id}`">
             {{ researcher.name }}
           </router-link>
         </li>
@@ -78,7 +78,8 @@ export default Vue.extend({
         const partnershipRes = (
           await ResearchersAPI.getPartnersByTimeRange(id, start, end)
         ).data;
-        const partnershipBasicInfoReqs = partnershipRes.partnership.map(id =>
+        console.log(partnershipRes);
+        const partnershipBasicInfoReqs = partnershipRes.partners.map(id =>
           ResearchersAPI.getBasicInfoById(id)
         );
         setTimeout(async () => {
