@@ -26,7 +26,9 @@
                 v-for="(affiliation, i) of researcherInfo.affiliation"
                 :key="'a' + i"
               >
-                {{ affiliation }}
+                <router-link :to="`/affiliations/${affiliation.id}`">
+                  {{ affiliation.name }}
+                </router-link>
               </li>
             </ul>
             <!--代表作-->
@@ -38,7 +40,9 @@
             </p>
             <ul>
               <li v-for="(paper, i) of researcherInfo.papers" :key="'p' + i">
-                {{ paper }}
+                <router-link :to="`/papers/${paper.id}`">
+                  {{ paper.title }}
+                </router-link>
               </li>
             </ul>
             <!--领域-->
@@ -50,7 +54,9 @@
             </p>
             <ul>
               <li v-for="(domain, i) of researcherInfo.domains" :key="'d' + i">
-                {{ domain }}
+                <router-link :to="`/domains/${domain.id}`">
+                  {{ domain.name }}
+                </router-link>
               </li>
             </ul>
           </el-card>
@@ -81,7 +87,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, Header, Main, TabPane, Tabs } from "element-ui";
-import { Researcher } from "@/interfaces/researchers";
+import { ResearcherDisplay } from "@/interfaces/researchers";
+import AffiliationsAPI from "@/api/affiliations";
+import DomainsAPI from "@/api/domains";
+import PapersAPI from "@/api/papers";
+import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "Researcher",
@@ -115,7 +125,7 @@ export default Vue.extend({
         affiliation: [],
         papers: [],
         domains: []
-      } as Researcher,
+      } as ResearcherDisplay,
       researcherImpact: "分析中..."
     };
   },
@@ -142,25 +152,53 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.researcherInfo = {
-        id: "37085876994",
-        name: "Jun Sun",
-        affiliation: ["2909598c2cfa81a4d1e2416e7e98b7e6"],
-        papers: ["7582759"],
-        domains: [
-          "92850b78bdc20bc1df259e9c026d1744",
-          "b86df49f1c63e593d88122ef3ae50238",
-          "c05fefb8e23f737b175a03597a551518",
-          "dac6fd9db22d265637cc780dde4ac6ba"
-        ]
-      };
-      this.isLoading = false;
-    }, 500);
-    setTimeout(() => {
-      this.researcherImpact = (9.89).toString();
-    }, 500);
+    this.fetchResearcher(this.id);
+  },
+  methods: {
+    async fetchResearcher(id: string) {
+      this.isLoading = true;
+      try {
+        const researcherInfo = (await ResearcherAPI.getInfoById(id)).data;
+        this.researcherInfo.id = researcherInfo.id;
+        this.researcherInfo.name = researcherInfo.name;
+        // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
+        // 机构
+        const affiliationsBasicInfoReqs = researcherInfo.affiliation.map(id =>
+          AffiliationsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const affiliationsRes = await Promise.all(affiliationsBasicInfoReqs);
+          this.researcherInfo.affiliation = affiliationsRes.map(
+            res => res.data
+          );
+        }, 0);
+        // 论文
+        const papersBasicInfoReqs = researcherInfo.papers.map(id =>
+          PapersAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const papersRes = await Promise.all(papersBasicInfoReqs);
+          this.researcherInfo.papers = papersRes.map(res => res.data);
+        }, 0);
+        // 领域
+        const domainsBasicInfoReqs = researcherInfo.domains.map(id =>
+          DomainsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const domainsRes = await Promise.all(domainsBasicInfoReqs);
+          this.researcherInfo.domains = domainsRes.map(res => res.data);
+        }, 0);
+        // 影响力
+        setTimeout(async () => {
+          const impactRes = await ResearcherAPI.getImpact(researcherInfo.id);
+          this.researcherImpact = impactRes.data.toString();
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+      } finally {
+        this.isLoading = false;
+      }
+    }
   }
 });
 </script>
