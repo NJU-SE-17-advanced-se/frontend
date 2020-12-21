@@ -126,11 +126,7 @@
     </el-card>
     <el-dialog title="不推荐审稿人" :visible.sync="showDialog">
       <ol v-if="reviewersNotRecommended.length > 0">
-        <li
-          v-for="reviewer of reviewersNotRecommended"
-          :key="reviewer.id"
-          style="padding: 5px"
-        >
+        <li v-for="reviewer of reviewersNotRecommended" :key="reviewer.id">
           <router-link :to="`/researchers/${reviewer.id}`">
             {{ reviewer.name }}
           </router-link>

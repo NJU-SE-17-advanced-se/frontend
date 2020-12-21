@@ -10,4 +10,8 @@ body,
 #app {
   height: 100%;
 }
+
+li {
+  padding: 5px;
+}
 </style>

@@ -126,11 +126,7 @@
     </el-card>
     <el-dialog title="推荐审稿人" :visible.sync="showDialog">
       <ol v-if="reviewersRecommended.length > 0">
-        <li
-          v-for="reviewer of reviewersRecommended"
-          :key="reviewer.id"
-          style="padding: 5px"
-        >
+        <li v-for="reviewer of reviewersRecommended" :key="reviewer.id">
           <router-link :to="`/researchers/${reviewer.id}`">
             {{ reviewer.name }}
           </router-link>
