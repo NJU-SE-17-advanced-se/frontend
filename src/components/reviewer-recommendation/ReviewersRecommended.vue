@@ -1,107 +1,147 @@
 <template>
-  <el-card>
-    <el-form
-      :model="paperForm"
-      :rules="paperFormRules"
-      ref="paperForm"
-      label-width="100px"
-    >
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="paperForm.title" placeholder="请输入标题" />
-      </el-form-item>
-      <el-form-item label="作者" prop="researcherIds">
-        <el-select
-          v-model="paperForm.researcherIds"
-          multiple
-          filterable
-          remote
-          reserve-keyword
-          clearable
-          placeholder="请输入学者信息"
-          :remote-method="getResearchersByKeyword"
-          :loading="isResearchersLoading"
-          style="width: 100%;"
-        >
-          <el-option
-            v-for="researcher in researchersToSelect"
-            :key="researcher.id"
-            :label="researcher.name"
-            :value="researcher.id"
+  <div class="wrapper">
+    <el-card>
+      <el-form
+        :model="paperForm"
+        :rules="paperFormRules"
+        ref="paperForm"
+        label-width="100px"
+      >
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="paperForm.title" placeholder="请输入标题" />
+        </el-form-item>
+        <el-form-item label="作者" prop="researcherIds">
+          <el-select
+            v-model="paperForm.researcherIds"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            clearable
+            placeholder="请输入学者信息"
+            :remote-method="getResearchersByKeyword"
+            :loading="isResearchersLoading"
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="researcher in researchersToSelect"
+              :key="researcher.id"
+              :label="researcher.name"
+              :value="researcher.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="摘要" prop="abs">
+          <el-input
+            type="textarea"
+            v-model="paperForm.abs"
+            placeholder="请输入摘要"
+            autosize
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="摘要" prop="abs">
-        <el-input
-          type="textarea"
-          v-model="paperForm.abs"
-          placeholder="请输入摘要"
-          autosize
-        />
-      </el-form-item>
-      <el-form-item label="年份" prop="date">
-        <el-date-picker
-          type="year"
-          placeholder="选择年份"
-          v-model="paperForm.date"
-          style="width: 100%;"
-        />
-      </el-form-item>
-      <el-form-item label="领域" prop="domainIds">
-        <el-select
-          v-model="paperForm.domainIds"
-          multiple
-          filterable
-          remote
-          reserve-keyword
-          clearable
-          placeholder="请输入领域信息（可选）"
-          :remote-method="getDomainsByKeyword"
-          :loading="isDomainsLoading"
-          style="width: 100%;"
-        >
-          <el-option
-            v-for="domain in domainsToSelect"
-            :key="domain.id"
-            :label="domain.name"
-            :value="domain.id"
+        </el-form-item>
+        <el-form-item label="出版物" prop="publication">
+          <el-select
+            v-model="paperForm.publication"
+            filterable
+            remote
+            reserve-keyword
+            clearable
+            placeholder="请输入出版物信息"
+            :remote-method="getPublicationsByKeyword"
+            :loading="isPublicationsLoading"
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="publication in publicationsToSelect"
+              :key="publication.id"
+              :label="publication.name"
+              :value="publication.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年份" prop="date">
+          <el-date-picker
+            type="year"
+            placeholder="选择年份"
+            v-model="paperForm.date"
+            style="width: 100%;"
+            value-format="yyyy"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="引用文献" prop="referenceIds">
-        <el-select
-          v-model="paperForm.referenceIds"
-          multiple
-          filterable
-          remote
-          reserve-keyword
-          clearable
-          placeholder="请输入引用文献信息（可选）"
-          :remote-method="getReferencesByKeyword"
-          :loading="isReferencesLoading"
-          style="width: 100%;"
+        </el-form-item>
+        <el-form-item label="领域" prop="domainIds">
+          <el-select
+            v-model="paperForm.domainIds"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            clearable
+            placeholder="请输入领域信息"
+            :remote-method="getDomainsByKeyword"
+            :loading="isDomainsLoading"
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="domain in domainsToSelect"
+              :key="domain.id"
+              :label="domain.name"
+              :value="domain.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="引用文献" prop="referenceIds">
+          <el-select
+            v-model="paperForm.referenceIds"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            clearable
+            placeholder="请输入引用文献信息（可选）"
+            :remote-method="getReferencesByKeyword"
+            :loading="isReferencesLoading"
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="reference in referencesToSelect"
+              :key="reference.id"
+              :label="reference.title"
+              :value="reference.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            style="float: right; margin: 5px"
+            @click="upload"
+          >
+            计算
+          </el-button>
+          <el-button style="float: right; margin: 5px" @click="reset">
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-dialog title="推荐审稿人" :visible.sync="showDialog">
+      <ol v-if="reviewersRecommended.length > 0">
+        <li
+          v-for="reviewer of reviewersRecommended"
+          :key="reviewer.id"
+          style="padding: 5px"
         >
-          <el-option
-            v-for="reference in referencesToSelect"
-            :key="reference.id"
-            :label="reference.title"
-            :value="reference.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          style="float: right; margin: 5px"
-          @click="upload"
-        >
-          立即创建
-        </el-button>
-        <el-button style="float: right; margin: 5px" @click="reset">
-          重置
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
+          <router-link :to="`/researchers/${reviewer.id}`">
+            {{ reviewer.name }}
+          </router-link>
+        </li>
+      </ol>
+      <p v-else>暂无推荐学者</p>
+      <template #footer>
+        <el-button type="primary" @click="showDialog = false">确 定</el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -110,18 +150,26 @@ import { ElForm } from "element-ui/types/form";
 import {
   Card,
   DatePicker,
+  Dialog,
   Form,
   FormItem,
   Input,
   Option,
   Select
 } from "element-ui";
+import { NewPaper } from "@/interfaces/papers";
+import { ResearcherBasic } from "@/interfaces/researchers";
+import DomainsAPI from "@/api/domains";
+import PapersAPI from "@/api/papers";
+import PublicationsAPI from "@/api/publications";
+import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ReviewersRecommended",
   components: {
     [Card.name]: Card,
     [DatePicker.name]: DatePicker,
+    [Dialog.name]: Dialog,
     [Form.name]: Form,
     [FormItem.name]: FormItem,
     [Input.name]: Input,
@@ -130,6 +178,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      showDialog: false,
       paperForm: {
         title: "",
         abs: "",
@@ -138,12 +187,11 @@ export default Vue.extend({
         date: "",
         domainIds: [],
         referenceIds: []
-      },
+      } as NewPaper,
       paperFormRules: {
         title: { required: true, message: "请填写论文标题", trigger: "blur" },
         abs: { required: true, message: "请填写论文摘要", trigger: "blur" },
         date: {
-          type: "date",
           required: true,
           message: "请选择论文发表年份",
           trigger: "change"
@@ -158,72 +206,159 @@ export default Vue.extend({
           required: true,
           message: "请选择论文发表的出版物",
           trigger: "change"
+        },
+        domainIds: {
+          required: true,
+          message: "请选择论文的领域",
+          trigger: "change"
         }
       },
       // 学者
       isResearchersLoading: false,
       researchersToSelect: [] as { id: string; name: string }[],
+      // 出版物
+      isPublicationsLoading: false,
+      publicationsToSelect: [] as { id: string; name: string }[],
       // 领域
       isDomainsLoading: false,
       domainsToSelect: [] as { id: string; name: string }[],
       // 引用文献
       isReferencesLoading: false,
-      referencesToSelect: [] as { id: string; title: string }[]
+      referencesToSelect: [] as { id: string; title: string }[],
+      // 推荐的审稿人
+      reviewersRecommended: [] as ResearcherBasic[]
     };
   },
   methods: {
-    getResearchersByKeyword(keyword: string) {
+    // TODO: 如果出现同名学者，如何处理？增加信息？
+    async getResearchersByKeyword(keyword: string) {
       if (keyword) {
         this.isResearchersLoading = true;
-        setTimeout(() => {
-          // TODO: 如果出现同名学者，如何处理？增加信息？
-          this.researchersToSelect = [
-            { id: "1", name: "Wen Sun 1" },
-            { id: "2", name: "Wen Sun 2" },
-            { id: "3", name: "Wen Sun 3" },
-            { id: "4", name: "Wen Sun 4" },
-            { id: "5", name: "Wen Sun 5" }
-          ];
+        try {
+          const researcherSearchRes = await ResearcherAPI.search(keyword);
+          const researcherIds = researcherSearchRes.data.result;
+          // 每一页数量必然在 0 - 10（约定）
+          const researchersBasicInfoReqs = researcherIds.map(id =>
+            ResearcherAPI.getBasicInfoById(id)
+          );
+          // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+          const reqBatch1 = Promise.all(researchersBasicInfoReqs.slice(0, 4));
+          const reqBatch2 = Promise.all(researchersBasicInfoReqs.slice(4, 7));
+          const reqBatch3 = Promise.all(researchersBasicInfoReqs.slice(7, 10));
+          const res1 = await reqBatch1;
+          const res2 = await reqBatch2;
+          const res3 = await reqBatch3;
+          this.researchersToSelect = [...res1, ...res2, ...res3].map(res => ({
+            id: res.data.id,
+            name: res.data.name
+          }));
+        } catch (e) {
+          console.log(e.toString());
+        } finally {
           this.isResearchersLoading = false;
-        }, 500);
+        }
       }
     },
-    getDomainsByKeyword(keyword: string) {
+    async getPublicationsByKeyword(keyword: string) {
+      if (keyword) {
+        this.isPublicationsLoading = true;
+        try {
+          const publicationSearchRes = await PublicationsAPI.search(keyword);
+          const publicationIds = publicationSearchRes.data.result;
+          // 每一页数量必然在 0 - 10（约定）
+          const publicationsBasicInfoReqs = publicationIds.map(id =>
+            PublicationsAPI.getBasicInfoById(id)
+          );
+          // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+          const reqBatch1 = Promise.all(publicationsBasicInfoReqs.slice(0, 4));
+          const reqBatch2 = Promise.all(publicationsBasicInfoReqs.slice(4, 7));
+          const reqBatch3 = Promise.all(publicationsBasicInfoReqs.slice(7, 10));
+          const res1 = await reqBatch1;
+          const res2 = await reqBatch2;
+          const res3 = await reqBatch3;
+          this.publicationsToSelect = [...res1, ...res2, ...res3].map(res => ({
+            id: res.data.id,
+            name: res.data.name
+          }));
+        } catch (e) {
+          console.log(e.toString());
+        } finally {
+          this.isPublicationsLoading = false;
+        }
+      }
+    },
+    async getDomainsByKeyword(keyword: string) {
       if (keyword) {
         this.isDomainsLoading = true;
-        setTimeout(() => {
-          this.domainsToSelect = [
-            { id: "1", name: "Domain 1" },
-            { id: "2", name: "Domain 2" },
-            { id: "3", name: "Domain 3" },
-            { id: "4", name: "Domain 4" },
-            { id: "5", name: "Domain 5" }
-          ];
+        try {
+          const domainSearchRes = await DomainsAPI.search(keyword);
+          const domainIds = domainSearchRes.data.ids;
+          // 每一页数量必然在 0 - 10（约定）
+          const domainsBasicInfoReqs = domainIds.map(id =>
+            DomainsAPI.getBasicInfoById(id)
+          );
+          // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+          const reqBatch1 = Promise.all(domainsBasicInfoReqs.slice(0, 4));
+          const reqBatch2 = Promise.all(domainsBasicInfoReqs.slice(4, 7));
+          const reqBatch3 = Promise.all(domainsBasicInfoReqs.slice(7, 10));
+          const res1 = await reqBatch1;
+          const res2 = await reqBatch2;
+          const res3 = await reqBatch3;
+          this.domainsToSelect = [...res1, ...res2, ...res3].map(res => ({
+            id: res.data.id,
+            name: res.data.name
+          }));
+        } catch (e) {
+          console.log(e.toString());
+        } finally {
           this.isDomainsLoading = false;
-        }, 500);
+        }
       }
     },
-    getReferencesByKeyword(keyword: string) {
+    async getReferencesByKeyword(keyword: string) {
       if (keyword) {
         this.isReferencesLoading = true;
-        setTimeout(() => {
-          this.referencesToSelect = [
-            { id: "1", title: "Paper 1" },
-            { id: "2", title: "Paper 2" },
-            { id: "3", title: "Paper 3" },
-            { id: "4", title: "Paper 4" },
-            { id: "5", title: "Paper 5" }
-          ];
+        try {
+          const paperSearchRes = await PapersAPI.search(keyword);
+          const paperIds = paperSearchRes.data.ids;
+          // 每一页数量必然在 0 - 10（约定）
+          const papersBasicInfoReqs = paperIds.map(id =>
+            PapersAPI.getBasicInfoById(id)
+          );
+          // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+          const reqBatch1 = Promise.all(papersBasicInfoReqs.slice(0, 4));
+          const reqBatch2 = Promise.all(papersBasicInfoReqs.slice(4, 7));
+          const reqBatch3 = Promise.all(papersBasicInfoReqs.slice(7, 10));
+          const res1 = await reqBatch1;
+          const res2 = await reqBatch2;
+          const res3 = await reqBatch3;
+          this.referencesToSelect = [...res1, ...res2, ...res3].map(res => ({
+            id: res.data.id,
+            title: res.data.title
+          }));
+        } catch (e) {
+          console.log(e.toString());
+        } finally {
           this.isReferencesLoading = false;
-        }, 500);
+        }
       }
     },
     upload() {
       const paperForm = this.$refs.paperForm as ElForm;
-      paperForm.validate().then(valid => {
+      paperForm.validate().then(async valid => {
         if (valid) {
           console.log(this.paperForm);
-          // 上传
+          const reviewers = (
+            await PapersAPI.getRecommendReviewers(this.paperForm)
+          ).data;
+          this.showDialog = true;
+          const reviewersBasicInfoReqs = reviewers.map(id =>
+            ResearcherAPI.getBasicInfoById(id)
+          );
+          setTimeout(async () => {
+            const reviewersRes = await Promise.all(reviewersBasicInfoReqs);
+            this.reviewersRecommended = reviewersRes.map(res => res.data);
+          }, 0);
           this.reset();
         }
       });

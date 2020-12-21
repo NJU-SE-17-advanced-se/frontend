@@ -41,7 +41,7 @@ export interface PaperDisplay {
 // 用于审稿人推荐的新论文
 export interface NewPaper {
   abs: string;
-  date: number;
+  date: string;
   domainIds: string[];
   publication: string;
   referenceIds: string[];
