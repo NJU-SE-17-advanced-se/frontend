@@ -62,6 +62,18 @@ async function getResearchers(id: string): Promise<ApiResponse<string[]>> {
   return { status, data };
 }
 
+// mock 方法
+async function getUnknownAffiliation(): Promise<ApiResponse<AffiliationBasic>> {
+  return {
+    status: 404,
+    data: {
+      id: "",
+      name: "未知",
+      description: null
+    }
+  };
+}
+
 export default {
   search,
   getInfoById: apiWrapper(getInfoById, AffiliationHandlers.notFoundHandler),
@@ -71,5 +83,6 @@ export default {
   ),
   getDomains,
   getPapers,
-  getResearchers
+  getResearchers,
+  getUnknownAffiliation
 };

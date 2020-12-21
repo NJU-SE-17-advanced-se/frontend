@@ -23,12 +23,22 @@
             :loading="isResearchersLoading"
             style="width: 100%;"
           >
-            <el-option
+            <el-tooltip
               v-for="researcher in researchersToSelect"
               :key="researcher.id"
-              :label="researcher.name"
-              :value="researcher.id"
-            />
+              effect="dark"
+              placement="left"
+            >
+              <template #content>
+                <div
+                  @click="jumpToResearcher(researcher.id)"
+                  style="cursor: pointer"
+                >
+                  详情
+                </div>
+              </template>
+              <el-option :label="researcher.name" :value="researcher.id" />
+            </el-tooltip>
           </el-select>
         </el-form-item>
         <el-form-item label="摘要" prop="abs">
@@ -150,15 +160,17 @@ import {
   FormItem,
   Input,
   Option,
-  Select
+  Select,
+  Tooltip
 } from "element-ui";
 import { ElForm } from "element-ui/types/form";
 import { NewPaper } from "@/interfaces/papers";
+import { ResearcherBasic } from "@/interfaces/researchers";
+import AffiliationsAPI from "@/api/affiliations";
 import DomainsAPI from "@/api/domains";
 import PapersAPI from "@/api/papers";
 import PublicationsAPI from "@/api/publications";
 import ResearcherAPI from "@/api/researchers";
-import { ResearcherBasic } from "@/interfaces/researchers";
 
 export default Vue.extend({
   name: "ReviewersNotRecommend",
@@ -170,7 +182,8 @@ export default Vue.extend({
     [FormItem.name]: FormItem,
     [Input.name]: Input,
     [Option.name]: Option,
-    [Select.name]: Select
+    [Select.name]: Select,
+    [Tooltip.name]: Tooltip
   },
   data() {
     return {
@@ -245,13 +258,57 @@ export default Vue.extend({
           const res3 = await reqBatch3;
           this.researchersToSelect = [...res1, ...res2, ...res3].map(res => ({
             id: res.data.id,
-            name: res.data.name
+            name: res.data.name + ", 机构加载中..."
           }));
+          // 释放主线程，然后加载机构
+          // 保留最后一个机构的 id
+          setTimeout(() => {
+            this.fetchResearchersAffiliation(
+              [...res1, ...res2, ...res3].map(
+                res => res.data.affiliation[res.data.affiliation.length - 1]
+              )
+            );
+          }, 0);
         } catch (e) {
           console.log(e.toString());
         } finally {
           this.isResearchersLoading = false;
         }
+      }
+    },
+    async fetchResearchersAffiliation(ids: (string | undefined)[]) {
+      try {
+        // 严格相等，避免过滤为空串的 id，虽然并不可能出现，但没有必要扩大范围
+        const researchersAffiliationBasicInfoReqs = ids.map(id =>
+          id !== undefined
+            ? AffiliationsAPI.getBasicInfoById(id)
+            : AffiliationsAPI.getUnknownAffiliation()
+        );
+        // HTTP/1.1 浏览器最大连接数大致为 4 - 6，取最小值
+        const researcherAffiliationReqBatch1 = Promise.all(
+          researchersAffiliationBasicInfoReqs.slice(0, 4)
+        );
+        const researcherAffiliationReqBatch2 = Promise.all(
+          researchersAffiliationBasicInfoReqs.slice(4, 7)
+        );
+        const researcherAffiliationReqBatch3 = Promise.all(
+          researchersAffiliationBasicInfoReqs.slice(7, 10)
+        );
+        const researcherAffiliationRes = [
+          ...(await researcherAffiliationReqBatch1),
+          ...(await researcherAffiliationReqBatch2),
+          ...(await researcherAffiliationReqBatch3)
+        ];
+        // 去除加载提示，更换为真实的机构名
+        this.researchersToSelect = this.researchersToSelect.map((item, i) => ({
+          ...item,
+          name:
+            item.name.split(", ")[0] +
+            ", " +
+            researcherAffiliationRes[i].data.name
+        }));
+      } catch (e) {
+        console.log(e.toString());
       }
     },
     async getPublicationsByKeyword(keyword: string) {
@@ -361,6 +418,11 @@ export default Vue.extend({
     reset() {
       const paperForm = this.$refs.paperForm as ElForm;
       paperForm.resetFields();
+    },
+    jumpToResearcher(id: string) {
+      const url = this.$router.resolve(`/researchers/${id}`);
+      const openWindow = window.open(url.href, "_blank");
+      (openWindow as Window).opener = null;
     }
   }
 });
