@@ -19,11 +19,13 @@
         </div>
       </template>
       <ul>
-        <li v-for="paperId of paperIds" :key="paperId">
-          {{ paperId }}
+        <li v-for="paper of papersInfo" :key="paper.id">
+          <router-link :to="`/papers/${paper.id}`">
+            {{ paper.title }}
+          </router-link>
         </li>
       </ul>
-      <p v-if="paperIds.length === 0">暂无数据</p>
+      <p v-if="papersInfo.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>
@@ -31,6 +33,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
+import { PaperBasic } from "@/interfaces/papers";
+import { errorMsg } from "@/utils/message";
+import PapersAPI from "@/api/papers";
+import ResearchersAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherPapers",
@@ -46,13 +52,41 @@ export default Vue.extend({
     return {
       startDate: currentYearStr,
       endDate: currentYearStr,
-      paperIds: [] as string[]
+      papersInfo: [] as PaperBasic[]
     };
   },
+  watch: {
+    startDate() {
+      this.fetchPapers(this.id, this.startDate, this.endDate);
+    },
+    endDate() {
+      this.fetchPapers(this.id, this.startDate, this.endDate);
+    }
+  },
   mounted() {
-    setTimeout(() => {
-      this.paperIds = ["1", "2", "3", "4", "5"];
-    }, 500);
+    this.fetchPapers(this.id, this.startDate, this.endDate);
+  },
+  methods: {
+    async fetchPapers(id: string, start: string, end: string) {
+      if (!start) {
+        errorMsg("请选择开始年份");
+      } else if (!end) {
+        errorMsg("请选择结束年份");
+      } else if (new Date(start) > new Date(end)) {
+        errorMsg("开始年份不能在结束年份之后");
+      } else {
+        const paperIds = (
+          await ResearchersAPI.getPapersByTimeRange(id, start, end)
+        ).data;
+        const papersBasicInfoReqs = paperIds.map(id =>
+          PapersAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const papersRes = await Promise.all(papersBasicInfoReqs);
+          this.papersInfo = papersRes.map(res => res.data);
+        }, 0);
+      }
+    }
   }
 });
 </script>

@@ -19,11 +19,13 @@
         </div>
       </template>
       <ul>
-        <li v-for="affiliationId of affiliationIds" :key="affiliationId">
-          {{ affiliationId }}
+        <li v-for="affiliation of affiliationInfo" :key="affiliation.id">
+          <router-link :to="`/affiliations/${affiliation.id}`">
+            {{ affiliation.name }}
+          </router-link>
         </li>
       </ul>
-      <p v-if="affiliationIds.length === 0">暂无数据</p>
+      <p v-if="affiliationInfo.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>
@@ -31,6 +33,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
+import { AffiliationBasic } from "@/interfaces/affiliations";
+import { errorMsg } from "@/utils/message";
+import AffiliationsAPI from "@/api/affiliations";
+import ResearchersAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherAffiliations",
@@ -46,13 +52,41 @@ export default Vue.extend({
     return {
       startDate: currentYearStr,
       endDate: currentYearStr,
-      affiliationIds: [] as string[]
+      affiliationInfo: [] as AffiliationBasic[]
     };
   },
+  watch: {
+    startDate() {
+      this.fetchAffiliations(this.id, this.startDate, this.endDate);
+    },
+    endDate() {
+      this.fetchAffiliations(this.id, this.startDate, this.endDate);
+    }
+  },
   mounted() {
-    setTimeout(() => {
-      this.affiliationIds = ["1", "2", "3", "4", "5"];
-    }, 500);
+    this.fetchAffiliations(this.id, this.startDate, this.endDate);
+  },
+  methods: {
+    async fetchAffiliations(id: string, start: string, end: string) {
+      if (!start) {
+        errorMsg("请选择开始年份");
+      } else if (!end) {
+        errorMsg("请选择结束年份");
+      } else if (new Date(start) > new Date(end)) {
+        errorMsg("开始年份不能在结束年份之后");
+      } else {
+        const affiliationsIds = (
+          await ResearchersAPI.getAffiliationsByTimeRange(id, start, end)
+        ).data;
+        const affiliationsBasicInfoReqs = affiliationsIds.map(id =>
+          AffiliationsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const affiliationsRes = await Promise.all(affiliationsBasicInfoReqs);
+          this.affiliationInfo = affiliationsRes.map(res => res.data);
+        }, 0);
+      }
+    }
   }
 });
 </script>

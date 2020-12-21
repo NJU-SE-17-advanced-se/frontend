@@ -19,11 +19,13 @@
         </div>
       </template>
       <ul>
-        <li v-for="domainId of domainIds" :key="domainId">
-          {{ domainId }}
+        <li v-for="domain of domainInfo" :key="domain.id">
+          <router-link :to="`/domains/${domain.id}`">
+            {{ domain.name }}
+          </router-link>
         </li>
       </ul>
-      <p v-if="domainIds.length === 0">暂无数据</p>
+      <p v-if="domainInfo.length === 0">暂无数据</p>
     </el-card>
   </div>
 </template>
@@ -31,6 +33,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
+import { DomainBasic } from "@/interfaces/domains";
+import { errorMsg } from "@/utils/message";
+import DomainsAPI from "@/api/domains";
+import ResearchersAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherDomains",
@@ -46,13 +52,41 @@ export default Vue.extend({
     return {
       startDate: currentYearStr,
       endDate: currentYearStr,
-      domainIds: [] as string[]
+      domainInfo: [] as DomainBasic[]
     };
   },
+  watch: {
+    startDate() {
+      this.fetchDomains(this.id, this.startDate, this.endDate);
+    },
+    endDate() {
+      this.fetchDomains(this.id, this.startDate, this.endDate);
+    }
+  },
   mounted() {
-    setTimeout(() => {
-      this.domainIds = ["1", "2", "3", "4", "5"];
-    }, 500);
+    this.fetchDomains(this.id, this.startDate, this.endDate);
+  },
+  methods: {
+    async fetchDomains(id: string, start: string, end: string) {
+      if (!start) {
+        errorMsg("请选择开始年份");
+      } else if (!end) {
+        errorMsg("请选择结束年份");
+      } else if (new Date(start) > new Date(end)) {
+        errorMsg("开始年份不能在结束年份之后");
+      } else {
+        const domainsIds = (
+          await ResearchersAPI.getDomainsByTimeRange(id, start, end)
+        ).data;
+        const domainsBasicInfoReqs = domainsIds.map(id =>
+          DomainsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const domainsRes = await Promise.all(domainsBasicInfoReqs);
+          this.domainInfo = domainsRes.map(res => res.data);
+        }, 0);
+      }
+    }
   }
 });
 </script>

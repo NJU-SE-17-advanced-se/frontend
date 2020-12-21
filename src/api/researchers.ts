@@ -73,7 +73,7 @@ async function getPapersByTimeRange(
   id: string,
   start?: string,
   end?: string
-): Promise<ApiResponse<ApiResponse<string[]>>> {
+): Promise<ApiResponse<string[]>> {
   const { status, data } = await axios.get(
     `/entity-researcher/researchers/${id}/papers`,
     {
@@ -84,11 +84,16 @@ async function getPapersByTimeRange(
 }
 
 // 获取某学者某一段时间的合作者
+interface PartnershipRes {
+  partnership: string[];
+  weight: [number, number][];
+}
+
 async function getPartnersByTimeRange(
   id: string,
   start?: string,
   end?: string
-): Promise<ApiResponse<string[]>> {
+): Promise<ApiResponse<PartnershipRes>> {
   const { status, data } = await axios.get(
     `/task-partnership-analysis/researchers/${id}/partners-net`,
     {
