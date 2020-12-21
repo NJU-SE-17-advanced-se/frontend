@@ -61,6 +61,9 @@ export default Vue.extend({
     },
     endDate() {
       this.fetchPartnership(this.id, this.startDate, this.endDate);
+    },
+    id() {
+      this.fetchPartnership(this.id, this.startDate, this.endDate);
     }
   },
   mounted() {

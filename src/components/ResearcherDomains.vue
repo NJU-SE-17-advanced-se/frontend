@@ -61,6 +61,9 @@ export default Vue.extend({
     },
     endDate() {
       this.fetchDomains(this.id, this.startDate, this.endDate);
+    },
+    id() {
+      this.fetchDomains(this.id, this.startDate, this.endDate);
     }
   },
   mounted() {

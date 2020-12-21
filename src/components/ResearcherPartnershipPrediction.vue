@@ -44,6 +44,11 @@ export default Vue.extend({
       partnershipInfo: [] as PartnershipItem[]
     };
   },
+  watch: {
+    id() {
+      this.fetchPartnership(this.id);
+    }
+  },
   mounted() {
     this.fetchPartnership(this.id);
   },

@@ -151,6 +151,11 @@ export default Vue.extend({
       }
     }
   },
+  watch: {
+    id() {
+      this.fetchResearcher(this.id);
+    }
+  },
   mounted() {
     this.fetchResearcher(this.id);
   },

@@ -61,6 +61,9 @@ export default Vue.extend({
     },
     endDate() {
       this.fetchAffiliations(this.id, this.startDate, this.endDate);
+    },
+    id() {
+      this.fetchAffiliations(this.id, this.startDate, this.endDate);
     }
   },
   mounted() {
