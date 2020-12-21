@@ -164,9 +164,16 @@ export default Vue.extend({
           const res1 = await reqBatch1;
           const res2 = await reqBatch2;
           const res3 = await reqBatch3;
-          this.papersBasicInfo = [...res1, ...res2, ...res3].map(
-            res => res.data
-          );
+          // 实现分批加载时的响应
+          res1.forEach((info, i) => {
+            this.$set(this.papersBasicInfo, i, info.data);
+          });
+          res2.forEach((info, i) => {
+            this.$set(this.papersBasicInfo, 4 + i, info.data);
+          });
+          res3.forEach((info, i) => {
+            this.$set(this.papersBasicInfo, 7 + i, info.data);
+          });
           // 为了在 JSX 中解析，此处事件名称必须为 camelCase
           // 并且我不想引入一个新的库
           this.$emit("totalChange", paperSearchRes.data.count);
