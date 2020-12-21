@@ -167,13 +167,7 @@ export default Vue.extend({
         setTimeout(async () => {
           const researchersRes = await publicationsBasicInfoReq;
           // 一个暂时的 hack，按理来说不会出现这种情况，即超出预定范围的论文
-          this.paperInfo.publication = researchersRes?.data.name
-            ? researchersRes.data
-            : {
-                id: "",
-                name: "未知出版物",
-                publicationDate: ""
-              };
+          this.paperInfo.publication = researchersRes.data;
         }, 0);
         // 学者
         const researchersBasicInfoReqs = paperInfo.researchers.map(id =>
