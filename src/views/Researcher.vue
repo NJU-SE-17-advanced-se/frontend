@@ -71,13 +71,19 @@
           <researcher-domains :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="历史合作" name="partnership" lazy>
-          <researcher-partnership :id="researcherInfo.id" />
+          <researcher-partnership
+            :id="researcherInfo.id"
+            @refresh="switchTab"
+          />
         </el-tab-pane>
         <el-tab-pane label="领域预测" name="domain-prediction" lazy>
           <researcher-domains-prediction :id="researcherInfo.id" />
         </el-tab-pane>
         <el-tab-pane label="合作预测" name="partnership-prediction" lazy>
-          <researcher-partnership-prediction :id="researcherInfo.id" />
+          <researcher-partnership-prediction
+            :id="researcherInfo.id"
+            @refresh="switchTab"
+          />
         </el-tab-pane>
       </el-tabs>
     </el-main>
@@ -203,6 +209,9 @@ export default Vue.extend({
       } finally {
         this.isLoading = false;
       }
+    },
+    switchTab(name = "detail") {
+      this.activeTabName = name;
     }
   }
 });

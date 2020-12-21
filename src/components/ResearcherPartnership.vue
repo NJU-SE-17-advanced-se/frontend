@@ -64,6 +64,8 @@ export default Vue.extend({
     },
     id() {
       this.fetchPartnership(this.id, this.startDate, this.endDate);
+      // 回到详情页
+      this.$emit("refresh");
     }
   },
   mounted() {
@@ -81,14 +83,16 @@ export default Vue.extend({
         const partnershipRes = (
           await ResearchersAPI.getPartnersByTimeRange(id, start, end)
         ).data;
-        console.log(partnershipRes);
-        const partnershipBasicInfoReqs = partnershipRes.partners.map(id =>
-          ResearchersAPI.getBasicInfoById(id)
-        );
-        setTimeout(async () => {
-          const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
-          this.partnershipInfo = partnershipRes.map(res => res.data);
-        }, 0);
+        // 如果存在 partners 再获取
+        if (partnershipRes.partners) {
+          const partnershipBasicInfoReqs = partnershipRes.partners.map(id =>
+            ResearchersAPI.getBasicInfoById(id)
+          );
+          setTimeout(async () => {
+            const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
+            this.partnershipInfo = partnershipRes.map(res => res.data);
+          }, 0);
+        }
       }
     }
   }

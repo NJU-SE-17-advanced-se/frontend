@@ -66,10 +66,11 @@
           <paper-references
             :id="paperInfo.id"
             :references="paperInfo.references"
+            @refresh="switchTab"
           />
         </el-tab-pane>
         <el-tab-pane label="相关论文" name="related-papers" lazy>
-          <paper-related-papers :id="paperInfo.id" />
+          <paper-related-papers :id="paperInfo.id" @refresh="switchTab" />
         </el-tab-pane>
         <el-tab-pane label="相关学者" name="related-researchers" lazy>
           <paper-related-researchers :id="paperInfo.id" />
@@ -195,6 +196,9 @@ export default Vue.extend({
       } finally {
         this.isLoading = false;
       }
+    },
+    switchTab(name = "detail") {
+      this.activeTabName = name;
     }
   }
 });

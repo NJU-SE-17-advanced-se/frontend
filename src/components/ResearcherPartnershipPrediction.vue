@@ -6,7 +6,7 @@
       </template>
       <ul>
         <li v-for="researcher of partnershipInfo" :key="researcher.id">
-          <router-link :to="`/researches/${researcher.id}`">
+          <router-link :to="`/researchers/${researcher.id}`">
             {{ researcher.name }}
           </router-link>
           ,{{ researcher.prob }}
@@ -47,6 +47,8 @@ export default Vue.extend({
   watch: {
     id() {
       this.fetchPartnership(this.id);
+      // 回到详情页
+      this.$emit("refresh");
     }
   },
   mounted() {
