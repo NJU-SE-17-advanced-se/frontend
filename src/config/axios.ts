@@ -34,10 +34,10 @@ globalAxios.interceptors.response.use(
     return config;
   },
   error => {
-    if (error.response.status === 502) {
+    if (error.response?.status === 502) {
       errorMsg("服务暂时不可用，请刷新重试");
     }
-    if (error.response.status === 504) {
+    if (error.response?.status === 504) {
       errorMsg("服务请求超时，请刷新重试");
     }
     console.log(error);

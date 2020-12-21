@@ -104,7 +104,13 @@ async function getPartnersByTimeRange(
 }
 
 // 获取某学者未来的合作者
-async function predictPartners(id: string): Promise<ApiResponse<string[]>> {
+interface PredictPartnersRes {
+  [key: string]: number;
+}
+
+async function predictPartners(
+  id: string
+): Promise<ApiResponse<PredictPartnersRes>> {
   const { status, data } = await axios.get(
     `/task-partnership-analysis/researchers/${id}/potential-partners`
   );
