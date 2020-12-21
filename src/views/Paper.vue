@@ -32,6 +32,21 @@
                 </router-link>
               </li>
             </ul>
+            <!--领域-->
+            <p>
+              <strong>Domains:</strong>
+              <span v-if="paperInfo.domains.length === 0"> 暂无数据</span>
+            </p>
+            <ul>
+              <li
+                v-for="(domain, i) of paperInfo.domains"
+                :key="domain.id + 'd' + i"
+              >
+                <router-link :to="`/domains/${domain.id}`">
+                  {{ domain.name }}
+                </router-link>
+              </li>
+            </ul>
             <p><strong>Abstract:</strong> {{ paperInfo.abs }}</p>
             <p>
               <strong>Link:</strong>
@@ -147,7 +162,7 @@ export default Vue.extend({
         // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
         // 出版物
         const publicationsBasicInfoReq = PublicationsAPI.getBasicInfoById(
-          paperInfo.id
+          paperInfo.publication
         );
         setTimeout(async () => {
           const researchersRes = await publicationsBasicInfoReq;
