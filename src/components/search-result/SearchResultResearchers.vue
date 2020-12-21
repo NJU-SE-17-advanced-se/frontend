@@ -127,7 +127,7 @@ export default Vue.extend({
         }));
         // 为了在 JSX 中解析，此处事件名称必须为 camelCase
         // 并且我不想引入一个新的库
-        this.$emit("totalChange", 50);
+        this.$emit("totalChange", researcherSearchRes.data.count);
         // 根据 id 更新论文其他信息
         this.researchersBasicInfo.forEach(researcher => {
           setTimeout(async () => {
