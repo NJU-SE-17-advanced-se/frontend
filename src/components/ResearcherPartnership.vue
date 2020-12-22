@@ -1,5 +1,4 @@
 <template>
-  <!--TODO: 可以考虑替换成关系图-->
   <div class="wrapper">
     <el-card>
       <template #header>
@@ -19,14 +18,7 @@
           />
         </div>
       </template>
-      <ul>
-        <li v-for="researcher of partnershipInfo" :key="researcher.id">
-          <router-link :to="`/researchers/${researcher.id}`">
-            {{ researcher.name }}
-          </router-link>
-        </li>
-      </ul>
-      <p v-if="partnershipInfo.length === 0">暂无数据</p>
+      <div id="main" style="width: 600px; height:400px;"></div>
     </el-card>
   </div>
 </template>
@@ -34,7 +26,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Card, DatePicker } from "element-ui";
-import { ResearcherBasic } from "@/interfaces/researchers";
+import {
+  EchartsItemEdge,
+  EchartsItemNode,
+  EchartsLink,
+  EchartsNode
+} from "@/interfaces/echarts";
 import { errorMsg } from "@/utils/message";
 import ResearchersAPI from "@/api/researchers";
 
@@ -52,7 +49,7 @@ export default Vue.extend({
     return {
       startDate: currentYearStr,
       endDate: currentYearStr,
-      partnershipInfo: [] as ResearcherBasic[]
+      echartsInstance: null
     };
   },
   watch: {
@@ -64,11 +61,20 @@ export default Vue.extend({
     },
     id() {
       this.fetchPartnership(this.id, this.startDate, this.endDate);
-      // 回到详情页
-      this.$emit("refresh");
+      // 为了关系图的完整体验，暂时先不刷新
+      // this.$emit("refresh");
     }
   },
   mounted() {
+    this.echartsInstance = echarts.init(document.getElementById("main"));
+    // 需要强制类型转换
+    ((this.echartsInstance as unknown) as EchartsInstance).on("click", item => {
+      // 点击与当前结点不同的结点时更新
+      const isDifferentNode = item.data.id !== this.id;
+      if (item.dataType === "node" && isDifferentNode) {
+        this.$router.push(`/researchers/${item.data.id}`);
+      }
+    });
     this.fetchPartnership(this.id, this.startDate, this.endDate);
   },
   methods: {
@@ -84,15 +90,82 @@ export default Vue.extend({
           await ResearchersAPI.getPartnersByTimeRange(id, start, end)
         ).data;
         // 如果存在 partners 再获取
-        if (partnershipRes.partners) {
-          const partnershipBasicInfoReqs = partnershipRes.partners.map(id =>
-            ResearchersAPI.getBasicInfoById(id)
-          );
+        if (partnershipRes.partners && partnershipRes.weight) {
+          // 相加获取权重
+          const origWeights = partnershipRes.weight;
+          const weights = partnershipRes.weight.map(t => t[0] + t[1]);
+          // 绘制关系图，要包括自己
+          const nodes = [this.id, ...partnershipRes.partners].map(id => ({
+            id,
+            name: "加载中...",
+            symbolSize: 10 + Math.random() * 10,
+            value: 10 + Math.random() * 10 // TODO: 影响力
+          }));
+          const links = partnershipRes.partners.map((id, i) => ({
+            source: this.id,
+            target: id,
+            value: weights[i],
+            weight: origWeights[i]
+          }));
+          this.drawRelationGraph(this.echartsInstance, nodes, links);
+          // 获取进一步的数据，要包括自己
+          const partnershipBasicInfoReqs = [
+            this.id,
+            ...partnershipRes.partners
+          ].map(id => ResearchersAPI.getBasicInfoById(id));
           setTimeout(async () => {
             const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
-            this.partnershipInfo = partnershipRes.map(res => res.data);
+            const partnershipInfo = partnershipRes.map(res => res.data);
+            nodes.forEach((node, i) => {
+              node.name = partnershipInfo[i].name;
+            });
+            this.drawRelationGraph(this.echartsInstance, nodes, links);
           }, 0);
         }
+      }
+    },
+    drawRelationGraph(
+      echartInstance: EchartsInstance | null,
+      nodes: EchartsNode[],
+      links: EchartsLink[]
+    ) {
+      const option = {
+        tooltip: {
+          formatter(item: EchartsItemNode | EchartsItemEdge) {
+            if (item.dataType === "node") {
+              return `
+              <div>
+                <p>${item.data.name}</p>
+                <p>影响力: ${item.data.value}</p>
+              </div>`;
+            } else {
+              // weight 是一个二元组 [合作，共引]
+              return `
+              <div>
+                <p>合作: ${item.data.weight[0]}</p>
+                <p>共引: ${item.data.weight[1]}</p>
+              </div>`;
+            }
+          }
+        },
+        series: [
+          {
+            type: "graph",
+            layout: "force",
+            data: nodes,
+            links,
+            draggable: true,
+            label: {
+              position: "right"
+            },
+            force: {
+              edgeLength: [20, 100]
+            }
+          }
+        ]
+      };
+      if (echartInstance) {
+        echartInstance.setOption(option);
       }
     }
   }
