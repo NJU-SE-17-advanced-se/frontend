@@ -49,7 +49,10 @@ export default Vue.extend({
     return {
       startDate: currentYearStr,
       endDate: currentYearStr,
-      echartsInstance: null
+      // 关系图
+      echartsInstance: null,
+      nodes: [] as EchartsNode[],
+      links: [] as EchartsLink[]
     };
   },
   watch: {
@@ -61,8 +64,9 @@ export default Vue.extend({
     },
     id() {
       this.fetchPartnership(this.id, this.startDate, this.endDate);
-      // 为了关系图的完整体验，暂时先不刷新
+      // 为了关系图的完整体验，暂时先不回到详情页，但是要刷新关系图
       // this.$emit("refresh");
+      this.drawRelationGraph(this.echartsInstance, this.nodes, this.links);
     }
   },
   mounted() {
@@ -95,19 +99,19 @@ export default Vue.extend({
           const origWeights = partnershipRes.weight;
           const weights = partnershipRes.weight.map(t => t[0] + t[1]);
           // 绘制关系图，要包括自己
-          const nodes = [this.id, ...partnershipRes.partners].map(id => ({
+          this.nodes = [this.id, ...partnershipRes.partners].map(id => ({
             id,
             name: "加载中...",
             symbolSize: 10 + Math.random() * 10,
             value: 10 + Math.random() * 10 // TODO: 影响力
           }));
-          const links = partnershipRes.partners.map((id, i) => ({
+          this.links = partnershipRes.partners.map((id, i) => ({
             source: this.id,
             target: id,
             value: weights[i],
             weight: origWeights[i]
           }));
-          this.drawRelationGraph(this.echartsInstance, nodes, links);
+          this.drawRelationGraph(this.echartsInstance, this.nodes, this.links);
           // 获取进一步的数据，要包括自己
           const partnershipBasicInfoReqs = [
             this.id,
@@ -116,10 +120,14 @@ export default Vue.extend({
           setTimeout(async () => {
             const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
             const partnershipInfo = partnershipRes.map(res => res.data);
-            nodes.forEach((node, i) => {
+            this.nodes.forEach((node, i) => {
               node.name = partnershipInfo[i].name;
             });
-            this.drawRelationGraph(this.echartsInstance, nodes, links);
+            this.drawRelationGraph(
+              this.echartsInstance,
+              this.nodes,
+              this.links
+            );
           }, 0);
         }
       }
