@@ -34,11 +34,13 @@ import {
 } from "@/interfaces/echarts";
 import { errorMsg } from "@/utils/message";
 import ResearchersAPI from "@/api/researchers";
+import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherPartnership",
   props: {
-    id: String
+    id: String,
+    impact: String
   },
   components: {
     [Card.name]: Card,
@@ -94,16 +96,21 @@ export default Vue.extend({
           await ResearchersAPI.getPartnersByTimeRange(id, start, end)
         ).data;
         // 如果存在 partners 再获取
-        if (partnershipRes.partners && partnershipRes.weight) {
+        if (
+          partnershipRes.partners &&
+          partnershipRes.impacts &&
+          partnershipRes.weight
+        ) {
           // 相加获取权重
           const origWeights = partnershipRes.weight;
           const weights = partnershipRes.weight.map(t => t[0] + t[1]);
           // 绘制关系图，要包括自己
-          this.nodes = [this.id, ...partnershipRes.partners].map(id => ({
+          const impacts = [Number(this.impact), ...partnershipRes.impacts];
+          this.nodes = [this.id, ...partnershipRes.partners].map((id, i) => ({
             id,
             name: "加载中...",
-            symbolSize: 10 + Math.random() * 10,
-            value: 10 + Math.random() * 10 // TODO: 影响力
+            symbolSize: Math.min(Math.max(impacts[i] * 10, 10), 40),
+            value: impacts[i]
           }));
           this.links = partnershipRes.partners.map((id, i) => ({
             source: this.id,

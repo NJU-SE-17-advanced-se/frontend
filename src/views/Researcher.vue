@@ -73,6 +73,7 @@
         <el-tab-pane label="历史合作" name="partnership" lazy>
           <researcher-partnership
             :id="researcherInfo.id"
+            :impact="researcherImpact"
             @refresh="switchTab"
           />
         </el-tab-pane>
