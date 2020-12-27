@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <el-card>
+    <el-card class="result-card" v-loading="isLoading">
       <template #header>
         <div class="date-select">
           <el-date-picker
@@ -50,6 +50,7 @@ export default Vue.extend({
   data() {
     const currentYearStr = new Date().getFullYear().toString();
     return {
+      isLoading: false,
       startDate: currentYearStr,
       endDate: currentYearStr,
       domainInfo: [] as DomainBasic[]
@@ -78,16 +79,23 @@ export default Vue.extend({
       } else if (new Date(start) > new Date(end)) {
         errorMsg("开始年份不能在结束年份之后");
       } else {
-        const domainsIds = (
-          await ResearchersAPI.getDomainsByTimeRange(id, start, end)
-        ).data;
-        const domainsBasicInfoReqs = domainsIds.map(id =>
-          DomainsAPI.getBasicInfoById(id)
-        );
-        setTimeout(async () => {
-          const domainsRes = await Promise.all(domainsBasicInfoReqs);
-          this.domainInfo = domainsRes.map(res => res.data);
-        }, 0);
+        this.isLoading = true;
+        try {
+          const domainsIds = (
+            await ResearchersAPI.getDomainsByTimeRange(id, start, end)
+          ).data;
+          const domainsBasicInfoReqs = domainsIds.map(id =>
+            DomainsAPI.getBasicInfoById(id)
+          );
+          setTimeout(async () => {
+            const domainsRes = await Promise.all(domainsBasicInfoReqs);
+            this.domainInfo = domainsRes.map(res => res.data);
+            this.isLoading = false;
+          }, 0);
+        } catch (e) {
+          console.log(e.toString());
+          this.isLoading = false;
+        }
       }
     }
   }

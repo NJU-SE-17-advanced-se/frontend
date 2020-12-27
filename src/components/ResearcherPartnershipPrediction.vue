@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <el-card>
+    <el-card class="result-card" v-loading="isLoading">
       <template #header>
         <h3>该学者未来可能的合作学者</h3>
       </template>
@@ -39,6 +39,7 @@ export default Vue.extend({
   data() {
     const currentYearStr = new Date().getFullYear().toString();
     return {
+      isLoading: false,
       startDate: currentYearStr,
       endDate: currentYearStr,
       partnershipInfo: [] as PartnershipItem[]
@@ -56,29 +57,37 @@ export default Vue.extend({
   },
   methods: {
     async fetchPartnership(id: string) {
-      const partnershipRes = (await ResearchersAPI.predictPartners(id)).data;
-      // 总概率，用于计算比例
-      const totalProb = Object.values(partnershipRes).reduce(
-        (prev, current) => prev + current,
-        0
-      );
-      // 按概率从大到小排序
-      const partnershipBasicInfoReqs = Object.keys(partnershipRes)
-        .sort((a, b) => partnershipRes[b] - partnershipRes[a])
-        .map(id => ResearchersAPI.getBasicInfoById(id));
-      setTimeout(async () => {
-        const partnershipBasicInfoRes = await Promise.all(
-          partnershipBasicInfoReqs
+      this.isLoading = true;
+      try {
+        const partnershipRes = (await ResearchersAPI.predictPartners(id)).data;
+        // 总概率，用于计算比例
+        const totalProb = Object.values(partnershipRes).reduce(
+          (prev, current) => prev + current,
+          0
         );
-        // 保留两位小数
-        this.partnershipInfo = partnershipBasicInfoRes
-          .map(res => ({
-            ...res.data,
-            prob:
-              ((partnershipRes[res.data.id] / totalProb) * 100).toFixed(2) + "%"
-          }))
-          .sort((a, b) => Number(a.prob < b.prob));
-      }, 0);
+        // 按概率从大到小排序
+        const partnershipBasicInfoReqs = Object.keys(partnershipRes)
+          .sort((a, b) => partnershipRes[b] - partnershipRes[a])
+          .map(id => ResearchersAPI.getBasicInfoById(id));
+        setTimeout(async () => {
+          const partnershipBasicInfoRes = await Promise.all(
+            partnershipBasicInfoReqs
+          );
+          // 保留两位小数
+          this.partnershipInfo = partnershipBasicInfoRes
+            .map(res => ({
+              ...res.data,
+              prob:
+                ((partnershipRes[res.data.id] / totalProb) * 100).toFixed(2) +
+                "%"
+            }))
+            .sort((a, b) => Number(a.prob < b.prob));
+          this.isLoading = false;
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+        this.isLoading = false;
+      }
     }
   }
 });
@@ -87,11 +96,6 @@ export default Vue.extend({
 <style scoped lang="less">
 .wrapper {
   min-height: 70vh;
-
-  .date-select {
-    text-align: center;
-    margin-bottom: 20px;
-  }
 
   .result-card {
     margin-bottom: 40px;

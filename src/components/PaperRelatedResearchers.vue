@@ -71,10 +71,10 @@ export default Vue.extend({
             ...citedResearchersRes,
             ...citingResearchersRes
           ].map(res => res.data);
+          this.isLoading = false;
         }, 0);
       } catch (e) {
         console.log(e.toString());
-      } finally {
         this.isLoading = false;
       }
     }

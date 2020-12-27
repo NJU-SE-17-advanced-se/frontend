@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <el-card>
+    <el-card class="result-card" v-loading="isLoading">
       <template #header>
         <h3>该学者未来可能的研究领域</h3>
       </template>
@@ -34,6 +34,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isLoading: false,
       domainInfo: [] as DomainBasic[]
     };
   },
@@ -47,14 +48,21 @@ export default Vue.extend({
   },
   methods: {
     async fetchDomains(id: string) {
-      const domainsIds = (await ResearchersAPI.predictDomains(id)).data;
-      const domainsBasicInfoReqs = domainsIds.map(id =>
-        DomainsAPI.getBasicInfoById(id)
-      );
-      setTimeout(async () => {
-        const domainsRes = await Promise.all(domainsBasicInfoReqs);
-        this.domainInfo = domainsRes.map(res => res.data);
-      }, 0);
+      this.isLoading = true;
+      try {
+        const domainsIds = (await ResearchersAPI.predictDomains(id)).data;
+        const domainsBasicInfoReqs = domainsIds.map(id =>
+          DomainsAPI.getBasicInfoById(id)
+        );
+        setTimeout(async () => {
+          const domainsRes = await Promise.all(domainsBasicInfoReqs);
+          this.domainInfo = domainsRes.map(res => res.data);
+          this.isLoading = false;
+        }, 0);
+      } catch (e) {
+        console.log(e.toString());
+        this.isLoading = false;
+      }
     }
   }
 });
@@ -63,11 +71,6 @@ export default Vue.extend({
 <style scoped lang="less">
 .wrapper {
   min-height: 70vh;
-
-  .date-select {
-    text-align: center;
-    margin-bottom: 20px;
-  }
 
   .result-card {
     margin-bottom: 40px;

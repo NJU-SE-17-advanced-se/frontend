@@ -58,10 +58,10 @@ export default Vue.extend({
         setTimeout(async () => {
           const papersRes = await Promise.all(referencesBasicInfoReqs);
           this.referencesInfo = papersRes.map(res => res.data);
+          this.isLoading = false;
         }, 0);
       } catch (e) {
         console.log(e.toString());
-      } finally {
         this.isLoading = false;
       }
     }
