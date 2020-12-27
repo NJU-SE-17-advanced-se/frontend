@@ -8,7 +8,7 @@ const globalConfig: AxiosRequestConfig = {
     process.env.NODE_ENV === "production"
       ? "https://wensun.top/api"
       : "http://localhost:8393/api",
-  timeout: 15 * 1000, // 总请求时间不超过 15s
+  timeout: 30 * 1000, // 总请求时间不超过 30s
   validateStatus(status) {
     return (status >= 200 && status < 300) || allowStatusCodes.includes(status);
   }
