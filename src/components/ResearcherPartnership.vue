@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <el-card>
+    <el-card class="result-card" v-loading="isLoading">
       <template #header>
         <div class="date-select">
           <el-date-picker
@@ -49,6 +49,7 @@ export default Vue.extend({
   data() {
     const currentYearStr = new Date().getFullYear().toString();
     return {
+      isLoading: false,
       startDate: currentYearStr,
       endDate: currentYearStr,
       // 关系图
@@ -92,50 +93,65 @@ export default Vue.extend({
       } else if (new Date(start) > new Date(end)) {
         errorMsg("开始年份不能在结束年份之后");
       } else {
-        const partnershipRes = (
-          await ResearchersAPI.getPartnersByTimeRange(id, start, end)
-        ).data;
-        // 如果存在 partners 再获取
-        if (
-          partnershipRes.partners &&
-          partnershipRes.impacts &&
-          partnershipRes.weight
-        ) {
-          // 相加获取权重
-          const origWeights = partnershipRes.weight;
-          const weights = partnershipRes.weight.map(t => t[0] + t[1]);
-          // 绘制关系图，要包括自己
-          const impacts = [Number(this.impact), ...partnershipRes.impacts];
-          this.nodes = [this.id, ...partnershipRes.partners].map((id, i) => ({
-            id,
-            name: "加载中...",
-            symbolSize: Math.min(Math.max(impacts[i] * 10, 10), 40),
-            value: impacts[i]
-          }));
-          this.links = partnershipRes.partners.map((id, i) => ({
-            source: this.id,
-            target: id,
-            value: weights[i],
-            weight: origWeights[i]
-          }));
-          this.drawRelationGraph(this.echartsInstance, this.nodes, this.links);
-          // 获取进一步的数据，要包括自己
-          const partnershipBasicInfoReqs = [
-            this.id,
-            ...partnershipRes.partners
-          ].map(id => ResearchersAPI.getBasicInfoById(id));
-          setTimeout(async () => {
-            const partnershipRes = await Promise.all(partnershipBasicInfoReqs);
-            const partnershipInfo = partnershipRes.map(res => res.data);
-            this.nodes.forEach((node, i) => {
-              node.name = partnershipInfo[i].name;
-            });
+        this.isLoading = true;
+        try {
+          const partnershipRes = (
+            await ResearchersAPI.getPartnersByTimeRange(id, start, end)
+          ).data;
+          // 如果存在 partners 再获取
+          if (
+            partnershipRes.partners &&
+            partnershipRes.impacts &&
+            partnershipRes.weight
+          ) {
+            // 相加获取权重
+            const origWeights = partnershipRes.weight;
+            const weights = partnershipRes.weight.map(t => t[0] + t[1]);
+            // 绘制关系图，要包括自己
+            const impacts = [Number(this.impact), ...partnershipRes.impacts];
+            this.nodes = [this.id, ...partnershipRes.partners].map((id, i) => ({
+              id,
+              name: "加载中...",
+              symbolSize: Math.min(Math.max(impacts[i] * 10, 10), 40),
+              value: impacts[i]
+            }));
+            this.links = partnershipRes.partners.map((id, i) => ({
+              source: this.id,
+              target: id,
+              value: weights[i],
+              weight: origWeights[i]
+            }));
             this.drawRelationGraph(
               this.echartsInstance,
               this.nodes,
               this.links
             );
-          }, 0);
+            // 获取进一步的数据，要包括自己
+            const partnershipBasicInfoReqs = [
+              this.id,
+              ...partnershipRes.partners
+            ].map(id => ResearchersAPI.getBasicInfoById(id));
+            setTimeout(async () => {
+              const partnershipRes = await Promise.all(
+                partnershipBasicInfoReqs
+              );
+              const partnershipInfo = partnershipRes.map(res => res.data);
+              this.nodes.forEach((node, i) => {
+                node.name = partnershipInfo[i].name;
+              });
+              this.drawRelationGraph(
+                this.echartsInstance,
+                this.nodes,
+                this.links
+              );
+              this.isLoading = false;
+            }, 0);
+          } else {
+            this.isLoading = false;
+          }
+        } catch (e) {
+          console.log(e.toString());
+          this.isLoading = false;
         }
       }
     },
