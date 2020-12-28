@@ -47,7 +47,7 @@
             </ul>
             <!--领域-->
             <p>
-              <strong>Domains:</strong>
+              <strong>5 Selected Domains:</strong>
               <span v-if="researcherInfo.domains.length === 0">
                 暂无数据
               </span>
@@ -170,7 +170,8 @@ export default Vue.extend({
     async fetchResearcher(id: string) {
       this.isLoading = true;
       try {
-        const researcherInfo = (await ResearcherAPI.getInfoById(id)).data;
+        // 因为提供了详情的其他接口，所以这里用一个 basic 接口凑合一下
+        const researcherInfo = (await ResearcherAPI.getBasicInfoById(id)).data;
         this.researcherInfo.id = researcherInfo.id;
         this.researcherInfo.name = researcherInfo.name;
         // 这里可能会存在严重的性能问题，但是鉴于目前的数据量不是很大，应该不会造成非常严重的后果
@@ -193,9 +194,10 @@ export default Vue.extend({
           this.researcherInfo.papers = papersRes.map(res => res.data);
         }, 0);
         // 领域
-        const domainsBasicInfoReqs = researcherInfo.domains.map(id =>
-          DomainsAPI.getBasicInfoById(id)
-        );
+        // 选取前 5 个
+        const domainsBasicInfoReqs = researcherInfo.domains
+          .slice(0, 5)
+          .map(id => DomainsAPI.getBasicInfoById(id));
         setTimeout(async () => {
           const domainsRes = await Promise.all(domainsBasicInfoReqs);
           this.researcherInfo.domains = domainsRes.map(res => res.data);
