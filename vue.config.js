@@ -39,8 +39,11 @@ module.exports = {
     port: 8393,
     proxy: {
       "/api": {
-        target: "https://wensun.top",
-        changeOrigin: true
+        target: "http://101.132.102.201:8080/",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": ""
+        }
       }
     }
   }
