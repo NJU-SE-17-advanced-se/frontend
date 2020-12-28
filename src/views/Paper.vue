@@ -51,7 +51,7 @@
             <p>
               <strong>Link:</strong>
               <a
-                :href="`https://${paperInfo.link}`"
+                :href="paperInfo.link"
                 target="_blank"
                 rel="noopener noreferer"
               >
