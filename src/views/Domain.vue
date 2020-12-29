@@ -189,7 +189,7 @@ export default Vue.extend({
       if (this.isLoading) {
         return;
       }
-      this.fetchPapers(this.papersBatch);
+      this.fetchPapers();
     },
     async fetchPapers() {
       this.isPaperLoading = true;
