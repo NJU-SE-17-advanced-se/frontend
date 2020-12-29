@@ -34,7 +34,10 @@
             style="margin-top: 10px"
             class="loading"
           />
-          <li v-if="noMoreResearchers" style="color: #ccc; list-style: none">
+          <li
+            v-if="showNoMoreResearchers && noMoreResearchers"
+            style="color: #ccc; list-style: none"
+          >
             没有更多了
           </li>
         </ul>
@@ -57,7 +60,10 @@
             </router-link>
           </li>
           <li v-if="isPaperLoading" style="margin-top: 10px" class="loading" />
-          <li v-if="noMorePapers" style="color: #ccc; list-style: none">
+          <li
+            v-if="showNoMorePapers && noMorePapers"
+            style="color: #ccc; list-style: none"
+          >
             没有更多了
           </li>
         </ul>
@@ -71,9 +77,8 @@ import Vue from "vue";
 import { Card, Header, InfiniteScroll, Main } from "element-ui";
 import { DomainDisplay } from "@/interfaces/domains";
 import DomainsAPI from "@/api/domains";
-import ResearcherAPI from "@/api/researchers";
 import PapersAPI from "@/api/papers";
-import { ResearcherBasic } from "@/interfaces/researchers";
+import ResearcherAPI from "@/api/researchers";
 
 const RESEARCHER_BATCH_SIZE = 15;
 const PAPER_BATCH_SIZE = 10;
@@ -107,15 +112,13 @@ export default Vue.extend({
       // 论文
       papersIds: [] as string[],
       papersBatch: 0,
-      isPaperLoading: false,
-
-      count: 0, //起始页数值为0
-      loading: false,
-      totalPages: 5, // 取后端返回内容的总页数
-      list: [] as ResearcherBasic[] // 后端返回的数组
+      isPaperLoading: false
     };
   },
   computed: {
+    showNoMoreResearchers(): boolean {
+      return this.researcherIds.length > RESEARCHER_BATCH_SIZE;
+    },
     noMoreResearchers(): boolean {
       return (
         this.researchersBatch >=
@@ -124,6 +127,9 @@ export default Vue.extend({
     },
     isResearchersScrollDisabled(): boolean {
       return this.isResearcherLoading || this.noMoreResearchers;
+    },
+    showNoMorePapers(): boolean {
+      return this.papersIds.length > PAPER_BATCH_SIZE;
     },
     noMorePapers(): boolean {
       return (
@@ -144,6 +150,7 @@ export default Vue.extend({
         const domainInfo = (await DomainsAPI.getInfoById(id)).data;
         this.domainInfo.id = domainInfo.id;
         this.domainInfo.name = domainInfo.name;
+        // 设置 id，准备加载
         this.researcherIds = domainInfo.researchers;
         this.papersIds = domainInfo.papers;
         // 从上到下分批加载
@@ -165,7 +172,7 @@ export default Vue.extend({
       if (this.isLoading) {
         return;
       }
-      this.fetchResearchers(this.papersBatch);
+      this.fetchResearchers();
     },
     async fetchResearchers() {
       this.isResearcherLoading = true;
