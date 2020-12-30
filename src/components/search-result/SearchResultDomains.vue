@@ -75,6 +75,10 @@ export default Vue.extend({
         const res1 = await reqBatch1;
         const res2 = await reqBatch2;
         const res3 = await reqBatch3;
+        // 页面切换时数量不同，先清空
+        if (domainIds.length !== this.domainsBasicInfo.length) {
+          this.domainsBasicInfo = [];
+        }
         // 实现分批加载时的响应
         res1.forEach((info, i) => {
           this.$set(this.domainsBasicInfo, i, info.data);
