@@ -2,7 +2,7 @@
   <div>
     <el-header>
       <el-dropdown style="float: right; line-height: 60px">
-        <el-button type="primary">
+        <el-button>
           其他功能<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
         <template #dropdown>
