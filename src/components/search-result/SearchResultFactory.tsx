@@ -22,6 +22,12 @@ export default Vue.extend({
     SearchResultResearchers: () =>
       import("@/components/search-result/SearchResultResearchers.vue")
   },
+  watch: {
+    // 每次切换模式时，重置总页数
+    mode() {
+      this.$emit("total-change", 0);
+    }
+  },
   methods: {
     onTotalPagesChange(pages: number) {
       this.$emit("total-change", pages);
