@@ -34,7 +34,6 @@ import {
 } from "@/interfaces/echarts";
 import { errorMsg } from "@/utils/message";
 import ResearchersAPI from "@/api/researchers";
-import ResearcherAPI from "@/api/researchers";
 
 export default Vue.extend({
   name: "ResearcherPartnership",
