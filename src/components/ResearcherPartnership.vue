@@ -147,6 +147,7 @@ export default Vue.extend({
               this.isLoading = false;
             }, 0);
           } else {
+            this.drawRelationGraph(this.echartsInstance, [], []);
             this.isLoading = false;
           }
         } catch (e) {
@@ -160,7 +161,19 @@ export default Vue.extend({
       nodes: EchartsNode[],
       links: EchartsLink[]
     ) {
-      const option = {
+      const isGraphEmpty = nodes.length === 0 && links.length === 0;
+      const noDataOption = {
+        title: {
+          text: "暂无数据",
+          x: "center",
+          y: "center",
+          textStyle: {
+            fontWeight: "normal",
+            fontSize: 16
+          }
+        }
+      };
+      const normalOption = {
         tooltip: {
           formatter(item: EchartsItemNode | EchartsItemEdge) {
             if (item.dataType === "node") {
@@ -195,6 +208,7 @@ export default Vue.extend({
           }
         ]
       };
+      const option = isGraphEmpty ? noDataOption : normalOption;
       if (echartInstance) {
         echartInstance.setOption(option);
       }
