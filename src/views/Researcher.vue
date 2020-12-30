@@ -61,26 +61,56 @@
             </ul>
           </el-card>
         </el-tab-pane>
-        <el-tab-pane label="历史论文" name="papers" lazy>
+        <el-tab-pane
+          label="历史论文"
+          name="papers"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-papers :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="历史机构" name="affiliations" lazy>
+        <el-tab-pane
+          label="历史机构"
+          name="affiliations"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-affiliations :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="历史领域" name="domains" lazy>
+        <el-tab-pane
+          label="历史领域"
+          name="domains"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-domains :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="历史合作" name="partnership" lazy>
+        <el-tab-pane
+          label="历史合作"
+          name="partnership"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-partnership
             :id="researcherInfo.id"
             :impact="researcherImpact"
             @refresh="switchTab"
           />
         </el-tab-pane>
-        <el-tab-pane label="领域预测" name="domain-prediction" lazy>
+        <el-tab-pane
+          label="领域预测"
+          name="domain-prediction"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-domains-prediction :id="researcherInfo.id" />
         </el-tab-pane>
-        <el-tab-pane label="合作预测" name="partnership-prediction" lazy>
+        <el-tab-pane
+          label="合作预测"
+          name="partnership-prediction"
+          :disabled="!researcherInfo.id"
+          lazy
+        >
           <researcher-partnership-prediction
             :id="researcherInfo.id"
             @refresh="switchTab"

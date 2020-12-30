@@ -62,17 +62,32 @@
             <p><strong>OASIS-impact:</strong> {{ paperImpact }}</p>
           </el-card>
         </el-tab-pane>
-        <el-tab-pane label="引用文献" name="citations" lazy>
+        <el-tab-pane
+          label="引用文献"
+          name="citations"
+          :disabled="!paperInfo.id"
+          lazy
+        >
           <paper-references
             :id="paperInfo.id"
             :references="paperInfo.references"
             @refresh="switchTab"
           />
         </el-tab-pane>
-        <el-tab-pane label="相关论文" name="related-papers" lazy>
+        <el-tab-pane
+          label="相关论文"
+          name="related-papers"
+          :disabled="!paperInfo.id"
+          lazy
+        >
           <paper-related-papers :id="paperInfo.id" @refresh="switchTab" />
         </el-tab-pane>
-        <el-tab-pane label="相关学者" name="related-researchers" lazy>
+        <el-tab-pane
+          label="相关学者"
+          name="related-researchers"
+          :disabled="!paperInfo.id"
+          lazy
+        >
           <paper-related-researchers :id="paperInfo.id" />
         </el-tab-pane>
       </el-tabs>
