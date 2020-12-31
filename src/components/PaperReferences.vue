@@ -1,5 +1,4 @@
 <template>
-  <!--TODO: 可以考虑换成关系图-->
   <el-card class="result-card" v-loading="isLoading">
     <template #header>
       <h3>引用文献</h3>
