@@ -328,10 +328,23 @@ export default Vue.extend({
           const res1 = await reqBatch1;
           const res2 = await reqBatch2;
           const res3 = await reqBatch3;
-          this.publicationsToSelect = [...res1, ...res2, ...res3].map(res => ({
-            id: res.data.id,
-            name: res.data.name
-          }));
+          // 手动去重，暂时的一个 hack
+          // 这里很明显会得到错误的结果
+          const res = [...res1, ...res2, ...res3];
+          const publicationNameNoRepeat = new Set(
+            res.map(res => res.data.name)
+          );
+          const publicationNoRepeat: { id: string; name: string }[] = [];
+          for (const r of res) {
+            if (publicationNameNoRepeat.has(r.data.name)) {
+              publicationNoRepeat.push({
+                id: r.data.id,
+                name: r.data.name
+              });
+              publicationNameNoRepeat.delete(r.data.name);
+            }
+          }
+          this.publicationsToSelect = publicationNoRepeat;
         } catch (e) {
           console.log(e.toString());
         } finally {
